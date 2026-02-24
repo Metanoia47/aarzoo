@@ -874,37 +874,37 @@ Ham tere chehare pe sitare dekhate hai." </p>
                 title: "Ye Hawa Ye Raat",
                 artist: "Talat Mahmood",
                 src: "Yeh Hawa Yeh Raat Yeh Chandni.mp3",
-                cover: "" 
+                cover: "s01.jpeg" 
             },
             {
                 title: "Aye dil mujhe aisi jagah",
                 artist: "Talat Mahmood",
                 src: "Aye dil mujhe aisi jagah le chal.mp3",
-                cover: "" 
+                cover: "s02.jpeg" 
             },
             {
                 title: "Itana na mujhase tu pyar badha",
                 artist: "Talat Mahmood",
                 src: "Itana na mujhase tu pyar badha.mp3",
-                cover: "" 
+                cover: "s03.jpeg" 
             },
             {
                 title: "Aayega aanewala",
                 artist: "Lata Mangeshkar",
                 src: "aayega aanewala short.mp3",
-                cover: "" 
+                cover: "s04.jpeg" 
             },
             {
                 title: "Ye raat bheegi bheegi",
                 artist: "Lata Mangeshkar",
                 src: "Ye raat bheegi bheegi.mp3",
-                cover: "" 
+                cover: "s05.jpeg" 
             },
             {
                 title: "Sham e gham ki qasam",
                 artist: "Talat Mahmood",
                 src: "Sham e gham ki qasam.mp3",
-                cover: ""
+                cover: "s06.jpeg"
             }
         ];
         // ==========================================
@@ -1062,7 +1062,7 @@ Ham tere chehare pe sitare dekhate hai." </p>
             "अब तो हर साँस में तू ही तू है<br>अब तो हर धड़कन में तेरी ही सदा है",
             "मुझ को ये क्या हुआ है तेरे बा'द<br>मैं तो अपने ही जिस्म से डरता हूँ",
             "मिरे कमरे का क्या बयाँ साहिब<br>यहाँ ख़ून थूका गया है शरारत में",
-            "वो जो रूठी तो मनाना भी न आया मुझ को<br>ऐसे नादाँ से कोई इश्क़ करे भी 창ो क्यूँ",
+            "वो जो रूठी तो मनाना भी न आया मुझ को<br>ऐसे नादाँ से कोई इश्क़ करे भी तो क्यूँ",
             "अब के तजदीद-ए-वफ़ा का नहीं इम्काँ जानाँ<br>याद क्या तुझ को दिलाएँ तेरा पैमाँ जानाँ"
         ];
 
@@ -1324,12 +1324,19 @@ Ham tere chehare pe sitare dekhate hai." </p>
         // --- Mobile Media Session Integration ---
         function updateMediaSession(song) {
             if ('mediaSession' in navigator) {
+                const artworkUrl = (song.cover && song.cover.trim() !== "") 
+                    ? song.cover 
+                    : 'https://via.placeholder.com/512/3a1518/d4af37?text=Aarzoo';
+
                 navigator.mediaSession.metadata = new MediaMetadata({
                     title: song.title,
                     artist: song.artist,
                     album: 'Aarzoo Secret Vault',
                     artwork: [
-                        { src: 'https://via.placeholder.com/512/3a1518/d4af37?text=Aarzoo', sizes: '512x512', type: 'image/png' }
+                        { src: artworkUrl, sizes: '96x96', type: 'image/jpeg' },
+                        { src: artworkUrl, sizes: '128x128', type: 'image/jpeg' },
+                        { src: artworkUrl, sizes: '256x256', type: 'image/jpeg' },
+                        { src: artworkUrl, sizes: '512x512', type: 'image/jpeg' }
                     ]
                 });
 
