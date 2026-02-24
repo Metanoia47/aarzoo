@@ -148,7 +148,7 @@
 
         .song-info {
             text-align: center;
-            margin-bottom: 2.5rem;
+            margin-bottom: 1.5rem;
             width: 100%;
             padding: 0 10px;
         }
@@ -171,6 +171,67 @@
             letter-spacing: 3px;
             text-transform: uppercase;
             font-weight: 300;
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            gap: 15px;
+            margin-bottom: 1.5rem;
+            padding: 0 10px;
+        }
+
+        .progress-container span {
+            font-size: 0.8rem;
+            color: var(--text-sub);
+            min-width: 40px;
+            text-align: center;
+            font-variant-numeric: tabular-nums;
+        }
+
+        #seek-bar {
+            flex-grow: 1;
+            -webkit-appearance: none;
+            appearance: none;
+            background: rgba(212, 175, 55, 0.2);
+            height: 4px;
+            border-radius: 2px;
+            outline: none;
+            cursor: pointer;
+            position: relative;
+        }
+
+        #seek-bar::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: var(--accent-gold);
+            cursor: pointer;
+            box-shadow: 0 0 8px rgba(212, 175, 55, 0.6);
+            transition: transform 0.1s;
+        }
+
+        #seek-bar::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
+        }
+
+        #seek-bar::-moz-range-thumb {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: var(--accent-gold);
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 0 8px rgba(212, 175, 55, 0.6);
+            transition: transform 0.1s;
+        }
+
+        #seek-bar::-moz-range-thumb:hover {
+            transform: scale(1.2);
         }
 
         /* Controls */
@@ -269,6 +330,13 @@
             <p class="song-artist" id="artist">...</p>
         </div>
 
+        <!-- Progress Bar -->
+        <div class="progress-container">
+            <span id="current-time">0:00</span>
+            <input type="range" id="seek-bar" value="0" min="0" step="1">
+            <span id="duration">0:00</span>
+        </div>
+
         <!-- Audio Element (Hidden) -->
         <audio id="audio"></audio>
 
@@ -332,9 +400,22 @@
         const playIcon = document.getElementById('play-icon');
         const pauseIcon = document.getElementById('pause-icon');
         const statusMsg = document.getElementById('status-msg');
+        
+        // Progress bar elements
+        const seekBar = document.getElementById('seek-bar');
+        const currentTimeEl = document.getElementById('current-time');
+        const durationEl = document.getElementById('duration');
 
         let songIndex = 0;
         let isPlaying = false;
+
+        // Helper function to format time in MM:SS
+        function formatTime(seconds) {
+            if (isNaN(seconds)) return "0:00";
+            const mins = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+        }
 
         // Load initial song
         loadSong(playlist[songIndex]);
@@ -345,6 +426,12 @@
             audio.src = song.src;
             // Reset status message
             statusMsg.style.opacity = '0';
+            
+            // Reset Progress Bar visually when loading a new song
+            seekBar.value = 0;
+            currentTimeEl.innerText = "0:00";
+            durationEl.innerText = "0:00";
+            seekBar.style.background = `rgba(212, 175, 55, 0.2)`;
         }
 
         function playSong() {
@@ -390,16 +477,45 @@
             if (isPlaying) playSong();
         }
 
-        // Event Listeners
+        // --- Event Listeners ---
+
+        // Play/Pause
         playBtn.addEventListener('click', () => {
             isPlaying ? pauseSong() : playSong();
         });
 
+        // Prev/Next
         prevBtn.addEventListener('click', prevSong);
         nextBtn.addEventListener('click', nextSong);
 
         // Auto-play next song when current song ends (The Repeater logic)
         audio.addEventListener('ended', nextSong);
+
+        // --- Progress Bar Logic ---
+
+        // Update total duration once the audio metadata is loaded
+        audio.addEventListener('loadedmetadata', () => {
+            seekBar.max = audio.duration;
+            durationEl.innerText = formatTime(audio.duration);
+        });
+
+        // Update the seek bar and current time as the song plays
+        audio.addEventListener('timeupdate', () => {
+            seekBar.value = audio.currentTime;
+            currentTimeEl.innerText = formatTime(audio.currentTime);
+            
+            // Fills the track with gold color up to the current progress
+            const percentage = (audio.currentTime / audio.duration) * 100;
+            if (!isNaN(percentage)) {
+                seekBar.style.background = `linear-gradient(to right, var(--accent-gold) ${percentage}%, rgba(212, 175, 55, 0.2) ${percentage}%)`;
+            }
+        });
+
+        // Allow user to click/drag the seek bar to jump to a specific time
+        seekBar.addEventListener('input', () => {
+            audio.currentTime = seekBar.value;
+            currentTimeEl.innerText = formatTime(seekBar.value);
+        });
 
     </script>
 </body>
