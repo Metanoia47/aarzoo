@@ -42,10 +42,10 @@
             --btn-text: #ffffff;
         }
 
-        /* Theme: Pure Black Minimalist */
-        [data-theme="black"] {
+        /* Theme: Image Backdrop (Replaced Black Theme) */
+        [data-theme="backdrop"] {
             --bg-color: #050505;
-            --bg-gradient: radial-gradient(circle at top, #1a1a1a 0%, #000000 80%);
+            --bg-gradient: none;
             --card-bg: rgba(20, 20, 20, 0.6);
             --accent-main: #e0e0e0; /* Silver */
             --accent-sec: #333333;
@@ -111,6 +111,20 @@
             margin: 0;
             overflow: hidden; 
             transition: background 1s ease, color 1s ease;
+        }
+
+        /* --- Dynamic Backdrop --- */
+        #dynamic-bg {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -1;
+            background-size: cover;
+            background-position: center;
+            opacity: 0;
+            transition: background-image 1s ease, opacity 1s ease;
+        }
+        [data-theme="backdrop"] #dynamic-bg {
+            opacity: 0.3;
         }
 
         /* --- Ambient Hearts (Particles) --- */
@@ -731,6 +745,9 @@
 </head>
 <body>
 
+    <!-- Dynamic Background for Backdrop Theme -->
+    <div id="dynamic-bg"></div>
+
     <!-- Intro Welcome Screen -->
     <div id="welcome-screen">
         <h1 class="welcome-text" id="welcome-quote-text"></h1>
@@ -747,7 +764,7 @@
         <div class="theme-selector">
             <button class="theme-btn" data-set-theme="vault" style="background: #3a1518; color: #d4af37;" aria-label="Vault Theme"></button>
             <button class="theme-btn" data-set-theme="white" style="background: #f8f5f2; color: #b76e79;" aria-label="White Theme"></button>
-            <button class="theme-btn" data-set-theme="black" style="background: #111111; color: #e0e0e0;" aria-label="Black Theme"></button>
+            <button class="theme-btn" data-set-theme="backdrop" style="background: #111111; color: #e0e0e0;" aria-label="Backdrop Theme"></button>
             <button class="theme-btn" data-set-theme="cyan"  style="background: #092e33; color: #40e0d0;" aria-label="Cyan Theme"></button>
             <button class="theme-btn" data-set-theme="pink"  style="background: #fadce4; color: #c97a8e;" aria-label="Pink Theme"></button>
         </div>
@@ -1250,8 +1267,10 @@ Ham tere chehare pe sitare dekhate hai." </p>
             artistEl.innerText = song.artist;
             if(song.cover && song.cover.trim() !== "") {
                 recordCoverEl.style.backgroundImage = "url('" + song.cover + "')";
+                document.getElementById('dynamic-bg').style.backgroundImage = "url('" + song.cover + "')";
             } else {
                 recordCoverEl.style.backgroundImage = 'var(--btn-grad)';
+                document.getElementById('dynamic-bg').style.backgroundImage = "none";
             }
             audio.src = song.src;
             // Always update loop status when loading a new song
