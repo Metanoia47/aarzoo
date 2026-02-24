@@ -13,6 +13,7 @@
             --bg-color: #080303; 
             --bg-gradient: radial-gradient(circle at top, #3a1518 0%, #080303 80%);
             --card-bg: rgba(35, 15, 15, 0.6); 
+            --card-blur: blur(15px); /* Added blur variable */
             --accent-main: #d4af37; /* Gold */
             --accent-sec: #a62b32; /* Rose */
             --text-main: #fdfbf7; 
@@ -46,12 +47,13 @@
         [data-theme="backdrop"] {
             --bg-color: #050505;
             --bg-gradient: none;
-            --card-bg: rgba(20, 20, 20, 0.6);
+            --card-bg: rgba(0, 0, 0, 0.15); /* Significantly more transparent */
+            --card-blur: blur(2px); /* Greatly reduced blur to see the face */
             --accent-main: #e0e0e0; /* Silver */
             --accent-sec: #333333;
             --text-main: #ffffff;
-            --text-sub: #888888;
-            --shadow-color: rgba(0, 0, 0, 0.9);
+            --text-sub: #dddddd;
+            --shadow-color: rgba(0, 0, 0, 0.4);
             --inner-shadow: rgba(255, 255, 255, 0.02);
             --border-color: rgba(255, 255, 255, 0.1);
             --modal-bg: rgba(15, 15, 15, 0.95);
@@ -313,7 +315,7 @@
         /* --- Main Player Card (The Sleeve) --- */
         .player-card {
             background: var(--card-bg);
-            backdrop-filter: blur(15px);
+            backdrop-filter: var(--card-blur);
             border: 1px solid var(--border-color);
             border-radius: 24px;
             padding: 1.5rem;
@@ -324,7 +326,7 @@
             box-shadow: 0 15px 35px var(--shadow-color), inset 0 0 20px var(--inner-shadow);
             margin-bottom: 2rem;
             min-height: 180px; 
-            transition: background 1s ease, box-shadow 1s ease, border-color 1s ease;
+            transition: background 1s ease, backdrop-filter 1s ease, box-shadow 1s ease, border-color 1s ease;
         }
 
         /* Left Side (70%) - Details & Controls */
@@ -971,7 +973,7 @@ Ham tere chehare pe sitare dekhate hai." </p>
             "ये मुझे चैन क्यूँ नहीं पड़ता<br>एक ही शख़्स था जहान में क्या?",
             "कौन इस घर की देखभाल करे<br>रोज़ इक चीज़ टूट जाती है",
             "मैं भी बहुत अजीब हूँ, इतना अजीब हूँ कि बस<br>ख़ुद को तबाह कर लिया और मलाल भी नहीं",
-            "बे-दिली क्या यूँही दिन गुज़र जाएँगे<br>सिर्फ़ ज़िंदा रहे हम तो मर जाएँगे",
+            "बे-दिली क्या यूँही दिन गुज़र जाएँगे<br>सिर्फ़ ज़िंदा रहे हम transition: background 1s ease, color 1s ease;",
             "तेरा मिलना ख़ुशी की बात सही<br>तुझ से मिल कर उदास रहता हूँ",
             "किस लिए देखती हो आईना<br>तुम तो ख़ुद से भी ख़ूबसूरत हो",
             "एक गली थी जब उस से हम निकले<br>ऐसे निकले कि जैसे दम निकले",
@@ -1034,7 +1036,7 @@ Ham tere chehare pe sitare dekhate hai." </p>
             "सारे रिश्ते तबाह कर आया<br>दिल-ए-बर्बाद अपने घर आया",
             "हम ने उस को इतना देखा जितना देखा जा सकता था<br>लेकिन फिर भी दो आँखों से कितना देखा जा सकता था",
             "कोई हालत नहीं ये हालत है<br>ये तो आशोब-ए-ना-मुरादी है",
-            "शौक़ की उम्र रायगाँ ही गई<br>आप ने भी तो कुछ नहीं चाहा",
+            "शौक़ की उम्र रायगाँ ही गई<br>आप ने भी top कुछ नहीं चाहा",
             "तुम जो आए तो क्या मिला मुझ को<br>मेरी तन्हाई भी गई मुझ से",
             "किस तरह छोड़ दूँ तुम्हें जाना<br>तुम मेरी ज़िंदगी की habit हो",
             "तुम हो पहलू में पर क़रार नहीं<br>यानी ऐसा है जैसे फ़ुरक़त हो",
