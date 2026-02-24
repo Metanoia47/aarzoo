@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>For You</title>
+    <!-- Importing an elegant font from Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Montserrat:wght@300;400&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-color: #121212;
+            --card-bg: #1e1a18; /* Deep warm brown/charcoal */
+            --accent-gold: #d4af37; /* Premium brass/gold */
+            --text-main: #f5f5dc; /* Off-white/beige */
+            --text-sub: #8c8c8c;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            /* Subtle radial gradient for depth */
+            background: radial-gradient(circle at center, #2a2522 0%, #121212 100%);
+            overflow: hidden; /* Prevents scrolling for an app-like feel */
+        }
+
+        .player-container {
+            background-color: var(--card-bg);
+            width: 100%;
+            max-width: 380px;
+            height: 100vh; /* Full height on mobile */
+            max-height: 750px; /* Limits height on desktop */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2.5rem 2rem;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.9);
+            border-radius: 30px;
+            border: 1px solid rgba(212, 175, 55, 0.15);
+            position: relative;
+        }
+
+        /* Small decorative element at the top */
+        .player-container::before {
+            content: '';
+            position: absolute;
+            top: 20px;
+            width: 40px;
+            height: 4px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+        }
+
+        /* The Spinning Record */
+        .record-container {
+            width: 260px;
+            height: 260px;
+            border-radius: 50%;
+            background: repeating-radial-gradient(
+                #111,
+                #111 4px,
+                #222 5px,
+                #111 6px
+            );
+            box-shadow: 0 15px 25px rgba(0,0,0,0.6), inset 0 0 15px rgba(0,0,0,0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 2.5rem;
+            border: 3px solid #0a0a0a;
+            transition: transform 0.2s;
+            position: relative;
+        }
+
+        /* Vinyl Grooves shine effect */
+        .record-container::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            border-radius: 50%;
+            background: conic-gradient(
+                from 0deg,
+                transparent 0deg,
+                rgba(255,255,255,0.05) 45deg,
+                transparent 90deg,
+                transparent 180deg,
+                rgba(255,255,255,0.05) 225deg,
+                transparent 270deg,
+                transparent 360deg
+            );
+            pointer-events: none;
+        }
+
+        .record-label {
+            width: 85px;
+            height: 85px;
+            background-color: var(--accent-gold);
+            background-image: linear-gradient(135deg, #d4af37 0%, #aa8623 100%);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border: 2px solid #111;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.3);
+            z-index: 2;
+        }
+
+        .record-hole {
+            width: 12px;
+            height: 12px;
+            background-color: var(--bg-color);
+            border-radius: 50%;
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.8);
+        }
+
+        /* Animation class added via JS */
+        .spin {
+            animation: spinRecord 4s linear infinite;
+        }
+
+        @keyframes spinRecord {
+            100% { transform: rotate(360deg); }
+        }
+
+        .song-info {
+            text-align: center;
+            margin-bottom: 2.5rem;
+            width: 100%;
+            padding: 0 10px;
+        }
+
+        .song-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            font-style: italic;
+            color: var(--accent-gold);
+            margin-bottom: 0.5rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .song-artist {
+            font-size: 0.9rem;
+            color: var(--text-sub);
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            font-weight: 300;
+        }
+
+        /* Controls */
+        .controls {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 2rem;
+            width: 100%;
+        }
+
+        button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--text-main);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.2s ease;
+        }
+
+        button:active {
+            transform: scale(0.85);
+        }
+
+        button:hover {
+            color: var(--accent-gold);
+        }
+
+        .btn-main {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background-color: var(--accent-gold);
+            color: var(--card-bg);
+            box-shadow: 0 8px 20px rgba(212, 175, 55, 0.2);
+        }
+
+        .btn-main:hover {
+            background-color: #ebd076;
+            color: var(--card-bg);
+            box-shadow: 0 10px 25px rgba(212, 175, 55, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .btn-main:active {
+            transform: scale(0.95);
+        }
+
+        /* SVG Icons for buttons */
+        svg {
+            fill: currentColor;
+            width: 28px;
+            height: 28px;
+        }
+        
+        .btn-main svg {
+            width: 32px;
+            height: 32px;
+            margin-left: 4px; /* visually centers the play icon */
+        }
+
+        #pause-icon {
+            margin-left: 0; /* resets margin for pause icon */
+        }
+
+        /* Status message for preview environment */
+        #status-msg {
+            font-size: 0.75rem;
+            color: #ff6b6b;
+            margin-top: 20px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="player-container">
+        
+        <!-- Vinyl Record Visual -->
+        <div class="record-container" id="record">
+            <div class="record-label">
+                <div class="record-hole"></div>
+            </div>
+        </div>
+
+        <!-- Song Info -->
+        <div class="song-info">
+            <h2 class="song-title" id="title">Loading...</h2>
+            <p class="song-artist" id="artist">...</p>
+        </div>
+
+        <!-- Audio Element (Hidden) -->
+        <audio id="audio"></audio>
+
+        <!-- Player Controls -->
+        <div class="controls">
+            <button id="prev" aria-label="Previous">
+                <!-- Skip Back Icon -->
+                <svg viewBox="0 0 24 24"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/></svg>
+            </button>
+            <button id="play" class="btn-main" aria-label="Play/Pause">
+                <!-- Play Icon -->
+                <svg id="play-icon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                <!-- Pause Icon (Hidden by default) -->
+                <svg id="pause-icon" viewBox="0 0 24 24" style="display:none;"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+            </button>
+            <button id="next" aria-label="Next">
+                <!-- Skip Forward Icon -->
+                <svg viewBox="0 0 24 24"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/></svg>
+            </button>
+        </div>
+
+        <div id="status-msg">Add valid audio URLs to play music</div>
+    </div>
+
+    <script>
+        // ==========================================
+        // 🎵 YOUR PLAYLIST "SLOT" 🎵
+        // Replace the 'src' with your actual files when you put this on GitHub
+        // ==========================================
+        const playlist = [
+            {
+                title: "Can't Help Falling in Love",
+                artist: "Elvis Presley",
+                src: "song1.mp3" // Change this to your file!
+            },
+            {
+                title: "Fly Me To The Moon",
+                artist: "Frank Sinatra",
+                src: "song2.mp3" // Change this to your file!
+            },
+            {
+                title: "La Vie En Rose",
+                artist: "Edith Piaf",
+                src: "song3.wav" // Change this to your file!
+            },
+            {
+                title: "Put Your Head On My Shoulder",
+                artist: "Paul Anka",
+                src: "song4.mp3" // Change this to your file!
+            }
+        ];
+        // ==========================================
+
+        const audio = document.getElementById('audio');
+        const playBtn = document.getElementById('play');
+        const prevBtn = document.getElementById('prev');
+        const nextBtn = document.getElementById('next');
+        const titleEl = document.getElementById('title');
+        const artistEl = document.getElementById('artist');
+        const recordEl = document.getElementById('record');
+        const playIcon = document.getElementById('play-icon');
+        const pauseIcon = document.getElementById('pause-icon');
+        const statusMsg = document.getElementById('status-msg');
+
+        let songIndex = 0;
+        let isPlaying = false;
+
+        // Load initial song
+        loadSong(playlist[songIndex]);
+
+        function loadSong(song) {
+            titleEl.innerText = song.title;
+            artistEl.innerText = song.artist;
+            audio.src = song.src;
+            // Reset status message
+            statusMsg.style.opacity = '0';
+        }
+
+        function playSong() {
+            isPlaying = true;
+            playIcon.style.display = 'none';
+            pauseIcon.style.display = 'block';
+            recordEl.classList.add('spin');
+            
+            // Handle play promise to avoid errors when dummy files are used in preview
+            const playPromise = audio.play();
+            if (playPromise !== undefined) {
+                playPromise.catch(error => {
+                    console.log("Audio couldn't play (normal if using dummy file names). Animating UI anyway!");
+                    // Show a tiny message in the preview
+                    statusMsg.style.opacity = '1';
+                });
+            }
+        }
+
+        function pauseSong() {
+            isPlaying = false;
+            audio.pause();
+            playIcon.style.display = 'block';
+            pauseIcon.style.display = 'none';
+            recordEl.classList.remove('spin');
+        }
+
+        function prevSong() {
+            songIndex--;
+            if (songIndex < 0) {
+                songIndex = playlist.length - 1; // loop back to end
+            }
+            loadSong(playlist[songIndex]);
+            if (isPlaying) playSong();
+        }
+
+        function nextSong() {
+            songIndex++;
+            if (songIndex > playlist.length - 1) {
+                songIndex = 0; // loop back to start
+            }
+            loadSong(playlist[songIndex]);
+            if (isPlaying) playSong();
+        }
+
+        // Event Listeners
+        playBtn.addEventListener('click', () => {
+            isPlaying ? pauseSong() : playSong();
+        });
+
+        prevBtn.addEventListener('click', prevSong);
+        nextBtn.addEventListener('click', nextSong);
+
+        // Auto-play next song when current song ends (The Repeater logic)
+        audio.addEventListener('ended', nextSong);
+
+    </script>
+</body>
+</html>
