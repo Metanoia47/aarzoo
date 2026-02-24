@@ -5,15 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Aarzoo - آرزو</title>
     <!-- Importing an elegant font from Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Montserrat:wght@300;400&family=Noto+Nastaliq+Urdu:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Montserrat:wght@300;400;500&family=Noto+Nastaliq+Urdu:wght@400;700&display=swap" rel="stylesheet">
     
     <style>
         :root {
-            --bg-color: #121212;
-            --card-bg: #1e1a18; /* Deep warm brown/charcoal */
-            --accent-gold: #d4af37; /* Premium brass/gold */
-            --text-main: #f5f5dc; /* Off-white/beige */
-            --text-sub: #8c8c8c;
+            /* Updated to a deep, romantic velvet/maroon vault theme */
+            --bg-color: #0a0505; 
+            --card-bg: #1c0f0f; 
+            --accent-gold: #d4af37; 
+            --accent-rose: #bd3a42;
+            --text-main: #fdfbf7; 
+            --text-sub: #a38c8c;
         }
 
         * {
@@ -31,23 +33,21 @@
             align-items: center;
             height: 100vh;
             margin: 0;
-            /* Subtle radial gradient for depth */
-            background: radial-gradient(circle at center, #2a2522 0%, #121212 100%);
-            overflow: hidden; /* Prevents scrolling for an app-like feel */
+            background: radial-gradient(circle at top center, #2b1414 0%, #0a0505 100%);
+            overflow: hidden; 
         }
 
         .player-container {
             background-color: var(--card-bg);
             width: 100%;
             max-width: 380px;
-            height: 100vh; /* Full height on mobile */
-            max-height: 750px; /* Limits height on desktop */
+            height: 95vh;
+            max-height: 850px;
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
-            padding: 2.5rem 2rem;
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.9);
+            padding: 2rem 1.5rem;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.9), inset 0 0 20px rgba(189, 58, 66, 0.05);
             border-radius: 30px;
             border: 1px solid rgba(212, 175, 55, 0.15);
             position: relative;
@@ -57,7 +57,7 @@
         .player-container::before {
             content: '';
             position: absolute;
-            top: 20px;
+            top: 15px;
             width: 40px;
             height: 4px;
             background-color: rgba(255, 255, 255, 0.1);
@@ -66,19 +66,27 @@
 
         .app-title {
             font-family: 'Noto Nastaliq Urdu', serif;
-            font-size: 2.5rem;
+            font-size: 2.8rem;
             color: var(--accent-gold);
             margin-top: 0.5rem;
-            margin-bottom: 1.5rem;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+            text-shadow: 0 2px 10px rgba(212, 175, 55, 0.3);
             text-align: center;
             line-height: 1.2;
         }
 
+        .subtitle {
+            font-family: 'Playfair Display', serif;
+            font-size: 0.9rem;
+            color: var(--accent-rose);
+            font-style: italic;
+            margin-bottom: 1.5rem;
+            letter-spacing: 1px;
+        }
+
         /* The Spinning Record */
         .record-container {
-            width: 260px;
-            height: 260px;
+            width: 220px;
+            height: 220px;
             border-radius: 50%;
             background: repeating-radial-gradient(
                 #111,
@@ -90,13 +98,13 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            margin-bottom: 2.5rem;
+            margin-bottom: 1.5rem;
             border: 3px solid #0a0a0a;
             transition: transform 0.2s;
             position: relative;
+            flex-shrink: 0;
         }
 
-        /* Vinyl Grooves shine effect */
         .record-container::after {
             content: '';
             position: absolute;
@@ -116,8 +124,8 @@
         }
 
         .record-label {
-            width: 85px;
-            height: 85px;
+            width: 70px;
+            height: 70px;
             background-color: var(--accent-gold);
             background-image: linear-gradient(135deg, #d4af37 0%, #aa8623 100%);
             border-radius: 50%;
@@ -125,19 +133,18 @@
             justify-content: center;
             align-items: center;
             border: 2px solid #111;
-            box-shadow: inset 0 0 10px rgba(0,0,0,0.3);
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.4);
             z-index: 2;
         }
 
         .record-hole {
-            width: 12px;
-            height: 12px;
+            width: 10px;
+            height: 10px;
             background-color: var(--bg-color);
             border-radius: 50%;
             box-shadow: inset 0 2px 5px rgba(0,0,0,0.8);
         }
 
-        /* Animation class added via JS */
         .spin {
             animation: spinRecord 4s linear infinite;
         }
@@ -148,17 +155,17 @@
 
         .song-info {
             text-align: center;
-            margin-bottom: 1.5rem;
+            margin-bottom: 1rem;
             width: 100%;
             padding: 0 10px;
         }
 
         .song-title {
             font-family: 'Playfair Display', serif;
-            font-size: 1.8rem;
+            font-size: 1.6rem;
             font-style: italic;
             color: var(--accent-gold);
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.3rem;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
@@ -166,9 +173,9 @@
         }
 
         .song-artist {
-            font-size: 0.9rem;
+            font-size: 0.8rem;
             color: var(--text-sub);
-            letter-spacing: 3px;
+            letter-spacing: 2px;
             text-transform: uppercase;
             font-weight: 300;
         }
@@ -178,15 +185,15 @@
             display: flex;
             align-items: center;
             width: 100%;
-            gap: 15px;
-            margin-bottom: 1.5rem;
-            padding: 0 10px;
+            gap: 10px;
+            margin-bottom: 1rem;
+            padding: 0 5px;
         }
 
         .progress-container span {
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             color: var(--text-sub);
-            min-width: 40px;
+            min-width: 35px;
             text-align: center;
             font-variant-numeric: tabular-nums;
         }
@@ -206,32 +213,12 @@
         #seek-bar::-webkit-slider-thumb {
             -webkit-appearance: none;
             appearance: none;
-            width: 14px;
-            height: 14px;
+            width: 12px;
+            height: 12px;
             border-radius: 50%;
             background: var(--accent-gold);
             cursor: pointer;
             box-shadow: 0 0 8px rgba(212, 175, 55, 0.6);
-            transition: transform 0.1s;
-        }
-
-        #seek-bar::-webkit-slider-thumb:hover {
-            transform: scale(1.2);
-        }
-
-        #seek-bar::-moz-range-thumb {
-            width: 14px;
-            height: 14px;
-            border-radius: 50%;
-            background: var(--accent-gold);
-            cursor: pointer;
-            border: none;
-            box-shadow: 0 0 8px rgba(212, 175, 55, 0.6);
-            transition: transform 0.1s;
-        }
-
-        #seek-bar::-moz-range-thumb:hover {
-            transform: scale(1.2);
         }
 
         /* Controls */
@@ -239,11 +226,12 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 2rem;
+            gap: 1.5rem;
             width: 100%;
+            margin-bottom: 1.5rem;
         }
 
-        button {
+        .control-btn {
             background: none;
             border: none;
             cursor: pointer;
@@ -254,17 +242,18 @@
             transition: all 0.2s ease;
         }
 
-        button:active {
-            transform: scale(0.85);
-        }
-
-        button:hover {
+        .control-btn:active { transform: scale(0.85); }
+        .control-btn:hover { color: var(--accent-gold); }
+        
+        /* Active state for repeat button */
+        .repeat-active {
             color: var(--accent-gold);
+            filter: drop-shadow(0 0 5px rgba(212, 175, 55, 0.5));
         }
 
         .btn-main {
-            width: 70px;
-            height: 70px;
+            width: 60px;
+            height: 60px;
             border-radius: 50%;
             background-color: var(--accent-gold);
             color: var(--card-bg);
@@ -278,35 +267,153 @@
             transform: translateY(-2px);
         }
 
-        .btn-main:active {
-            transform: scale(0.95);
-        }
-
-        /* SVG Icons for buttons */
         svg {
             fill: currentColor;
-            width: 28px;
-            height: 28px;
+            width: 24px;
+            height: 24px;
         }
         
         .btn-main svg {
-            width: 32px;
-            height: 32px;
-            margin-left: 4px; /* visually centers the play icon */
+            width: 28px;
+            height: 28px;
+            margin-left: 3px;
         }
 
-        #pause-icon {
-            margin-left: 0; /* resets margin for pause icon */
-        }
+        #pause-icon { margin-left: 0; }
 
-        /* Status message for preview environment */
-        #status-msg {
-            font-size: 0.75rem;
-            color: #ff6b6b;
-            margin-top: 20px;
-            opacity: 0;
-            transition: opacity 0.3s;
+        /* Playlist Section */
+        .playlist-wrapper {
+            width: 100%;
+            flex-grow: 1;
+            overflow-y: auto;
+            border-top: 1px solid rgba(212, 175, 55, 0.1);
+            padding-top: 1rem;
+            /* Custom scrollbar */
+            scrollbar-width: thin;
+            scrollbar-color: var(--accent-gold) transparent;
+        }
+        
+        .playlist-wrapper::-webkit-scrollbar { width: 4px; }
+        .playlist-wrapper::-webkit-scrollbar-thumb { background-color: var(--accent-gold); border-radius: 4px; }
+
+        .playlist-title {
+            font-size: 0.8rem;
+            color: var(--text-sub);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 0.8rem;
             text-align: center;
+        }
+
+        .playlist-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .playlist-item {
+            display: flex;
+            flex-direction: column;
+            padding: 10px 15px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 1px solid transparent;
+        }
+
+        .playlist-item:hover {
+            background: rgba(255, 255, 255, 0.06);
+        }
+
+        .playlist-item.playing {
+            background: rgba(212, 175, 55, 0.1);
+            border-color: rgba(212, 175, 55, 0.3);
+        }
+
+        .playlist-item-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1rem;
+            color: var(--text-main);
+            margin-bottom: 2px;
+        }
+
+        .playlist-item.playing .playlist-item-title {
+            color: var(--accent-gold);
+        }
+
+        .playlist-item-artist {
+            font-size: 0.7rem;
+            color: var(--text-sub);
+        }
+
+        /* Exit Warning Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(5px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal-overlay.show {
+            display: flex;
+            opacity: 1;
+        }
+
+        .modal-content {
+            background: var(--card-bg);
+            padding: 2.5rem 2rem;
+            border-radius: 20px;
+            text-align: center;
+            max-width: 320px;
+            border: 1px solid rgba(189, 58, 66, 0.3);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.8);
+        }
+
+        .modal-content h3 {
+            font-family: 'Playfair Display', serif;
+            color: var(--accent-gold);
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .modal-content p {
+            font-size: 0.95rem;
+            color: var(--text-main);
+            margin-bottom: 2rem;
+            line-height: 1.5;
+        }
+
+        .modal-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .btn-stay {
+            background: var(--accent-gold);
+            color: var(--card-bg);
+            padding: 12px;
+            border-radius: 10px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-leave {
+            background: transparent;
+            color: var(--text-sub);
+            padding: 10px;
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 10px;
+            cursor: pointer;
         }
     </style>
 </head>
@@ -314,8 +421,9 @@
 
     <div class="player-container">
         
-        <!-- App Title (Her Name) -->
+        <!-- App Title (Her Name & Theme) -->
         <h1 class="app-title">آرزو</h1>
+        <p class="subtitle">Your secret musical vault 🌹</p>
 
         <!-- Vinyl Record Visual -->
         <div class="record-container" id="record">
@@ -342,50 +450,67 @@
 
         <!-- Player Controls -->
         <div class="controls">
-            <button id="prev" aria-label="Previous">
-                <!-- Skip Back Icon -->
+            <!-- Repeat Button -->
+            <button id="repeat" class="control-btn" aria-label="Repeat Song">
+                <svg viewBox="0 0 24 24"><path d="M7 7h10v3l4-4-4-4v3H5v6h2V7zm10 10H7v-3l-4 4 4 4v-3h12v-6h-2v4z"/></svg>
+            </button>
+            <button id="prev" class="control-btn" aria-label="Previous">
                 <svg viewBox="0 0 24 24"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/></svg>
             </button>
-            <button id="play" class="btn-main" aria-label="Play/Pause">
-                <!-- Play Icon -->
+            <button id="play" class="btn-main control-btn" aria-label="Play/Pause">
                 <svg id="play-icon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-                <!-- Pause Icon (Hidden by default) -->
                 <svg id="pause-icon" viewBox="0 0 24 24" style="display:none;"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
             </button>
-            <button id="next" aria-label="Next">
-                <!-- Skip Forward Icon -->
+            <button id="next" class="control-btn" aria-label="Next">
                 <svg viewBox="0 0 24 24"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/></svg>
             </button>
         </div>
 
-        <div id="status-msg">Add valid audio URLs to play music</div>
+        <!-- Scrollable Playlist -->
+        <div class="playlist-wrapper">
+            <p class="playlist-title">Inside the Vault</p>
+            <ul class="playlist-list" id="playlist-container">
+                <!-- Generated by JS -->
+            </ul>
+        </div>
+    </div>
+
+    <!-- Loving Warning Modal -->
+    <div id="exit-modal" class="modal-overlay">
+        <div class="modal-content">
+            <h3>Leaving so soon? 🌹</h3>
+            <p>Are you sure you want to leave your secret vault? The music will stop playing if you go.</p>
+            <div class="modal-buttons">
+                <button id="stay-btn" class="btn-stay">I'll Stay Here</button>
+                <button id="leave-btn" class="btn-leave">I Have To Go</button>
+            </div>
+        </div>
     </div>
 
     <script>
         // ==========================================
         // 🎵 YOUR PLAYLIST "SLOT" 🎵
-        // Replace the 'src' with your actual files when you put this on GitHub
         // ==========================================
         const playlist = [
             {
                 title: "Ye Hawa Ye Raat Ye Chandani",
-                artist: "Talat Mahmood",
+                artist: "Hemant Kumar",
                 src: "Ye hawa ye raat ye chandani.mp3"
             },
             {
-                title: "Aye dil mujhe aisi jagah le chal",
-                artist: "Talat Mahmood",
-                src: "Aye dil mujhe aisi jagah le chal.mp3" // Change this to your file!
+                title: "Fly Me To The Moon",
+                artist: "Frank Sinatra",
+                src: "song2.mp3"
             },
             {
-                title: "La Vie En Rose",
-                artist: "Edith Piaf",
-                src: "song3.wav" // Change this to your file!
+                title: "Song 3 (Add Later)",
+                artist: "Unknown",
+                src: "song3.mp3" 
             },
             {
-                title: "Put Your Head On My Shoulder",
-                artist: "Paul Anka",
-                src: "song4.mp3" // Change this to your file!
+                title: "Song 4 (Add Later)",
+                artist: "Unknown",
+                src: "song4.mp3" 
             }
         ];
         // ==========================================
@@ -394,12 +519,13 @@
         const playBtn = document.getElementById('play');
         const prevBtn = document.getElementById('prev');
         const nextBtn = document.getElementById('next');
+        const repeatBtn = document.getElementById('repeat');
         const titleEl = document.getElementById('title');
         const artistEl = document.getElementById('artist');
         const recordEl = document.getElementById('record');
         const playIcon = document.getElementById('play-icon');
         const pauseIcon = document.getElementById('pause-icon');
-        const statusMsg = document.getElementById('status-msg');
+        const playlistContainer = document.getElementById('playlist-container');
         
         // Progress bar elements
         const seekBar = document.getElementById('seek-bar');
@@ -408,6 +534,26 @@
 
         let songIndex = 0;
         let isPlaying = false;
+        let isRepeating = false;
+
+        // --- Render the Visible Playlist ---
+        function renderPlaylist() {
+            playlistContainer.innerHTML = '';
+            playlist.forEach((song, index) => {
+                const li = document.createElement('li');
+                li.className = `playlist-item ${index === songIndex ? 'playing' : ''}`;
+                li.innerHTML = `
+                    <span class="playlist-item-title">${song.title}</span>
+                    <span class="playlist-item-artist">${song.artist}</span>
+                `;
+                li.onclick = () => {
+                    songIndex = index;
+                    loadSong(playlist[songIndex]);
+                    playSong();
+                };
+                playlistContainer.appendChild(li);
+            });
+        }
 
         // Helper function to format time in MM:SS
         function formatTime(seconds) {
@@ -417,17 +563,14 @@
             return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
         }
 
-        // Load initial song
-        loadSong(playlist[songIndex]);
-
         function loadSong(song) {
             titleEl.innerText = song.title;
             artistEl.innerText = song.artist;
             audio.src = song.src;
-            // Reset status message
-            statusMsg.style.opacity = '0';
             
-            // Reset Progress Bar visually when loading a new song
+            // Re-render playlist to update highlighted song
+            renderPlaylist();
+
             seekBar.value = 0;
             currentTimeEl.innerText = "0:00";
             durationEl.innerText = "0:00";
@@ -440,14 +583,9 @@
             pauseIcon.style.display = 'block';
             recordEl.classList.add('spin');
             
-            // Handle play promise to avoid errors when dummy files are used in preview
             const playPromise = audio.play();
             if (playPromise !== undefined) {
-                playPromise.catch(error => {
-                    console.log("Audio couldn't play (normal if using dummy file names). Animating UI anyway!");
-                    // Show a tiny message in the preview
-                    statusMsg.style.opacity = '1';
-                });
+                playPromise.catch(error => { console.log("Waiting for real audio files."); });
             }
         }
 
@@ -461,61 +599,85 @@
 
         function prevSong() {
             songIndex--;
-            if (songIndex < 0) {
-                songIndex = playlist.length - 1; // loop back to end
-            }
+            if (songIndex < 0) { songIndex = playlist.length - 1; }
             loadSong(playlist[songIndex]);
             if (isPlaying) playSong();
         }
 
         function nextSong() {
             songIndex++;
-            if (songIndex > playlist.length - 1) {
-                songIndex = 0; // loop back to start
-            }
+            if (songIndex > playlist.length - 1) { songIndex = 0; }
             loadSong(playlist[songIndex]);
             if (isPlaying) playSong();
         }
 
         // --- Event Listeners ---
-
-        // Play/Pause
         playBtn.addEventListener('click', () => {
             isPlaying ? pauseSong() : playSong();
         });
 
-        // Prev/Next
         prevBtn.addEventListener('click', prevSong);
         nextBtn.addEventListener('click', nextSong);
 
-        // Auto-play next song when current song ends (The Repeater logic)
+        // Repeat button logic
+        repeatBtn.addEventListener('click', () => {
+            isRepeating = !isRepeating;
+            audio.loop = isRepeating; // Native HTML5 audio loop
+            repeatBtn.classList.toggle('repeat-active', isRepeating);
+        });
+
+        // Auto-play next song (only fires if audio.loop is false)
         audio.addEventListener('ended', nextSong);
 
         // --- Progress Bar Logic ---
-
-        // Update total duration once the audio metadata is loaded
         audio.addEventListener('loadedmetadata', () => {
             seekBar.max = audio.duration;
             durationEl.innerText = formatTime(audio.duration);
         });
 
-        // Update the seek bar and current time as the song plays
         audio.addEventListener('timeupdate', () => {
             seekBar.value = audio.currentTime;
             currentTimeEl.innerText = formatTime(audio.currentTime);
             
-            // Fills the track with gold color up to the current progress
             const percentage = (audio.currentTime / audio.duration) * 100;
             if (!isNaN(percentage)) {
                 seekBar.style.background = `linear-gradient(to right, var(--accent-gold) ${percentage}%, rgba(212, 175, 55, 0.2) ${percentage}%)`;
             }
         });
 
-        // Allow user to click/drag the seek bar to jump to a specific time
         seekBar.addEventListener('input', () => {
             audio.currentTime = seekBar.value;
             currentTimeEl.innerText = formatTime(seekBar.value);
         });
+
+        // --- Exit Intent / Back Button Safeguard ---
+        let intentToLeave = false;
+        
+        // Push an empty state immediately so the back button is trapped
+        history.pushState(null, null, location.href);
+        
+        window.addEventListener('popstate', function(event) {
+            if (intentToLeave) return; // If they confirmed leave, allow it
+            
+            // Show the loving warning modal
+            document.getElementById('exit-modal').classList.add('show');
+            
+            // Push another state to trap them again just in case
+            history.pushState(null, null, location.href);
+        });
+
+        // Modal Button Listeners
+        document.getElementById('stay-btn').addEventListener('click', () => {
+            document.getElementById('exit-modal').classList.remove('show');
+        });
+
+        document.getElementById('leave-btn').addEventListener('click', () => {
+            intentToLeave = true;
+            history.back(); // Execute the actual back navigation
+        });
+
+        // Initialize the app
+        loadSong(playlist[songIndex]);
 
     </script>
 </body>
