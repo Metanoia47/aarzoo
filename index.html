@@ -37,7 +37,7 @@
             --shadow-color: rgba(150, 140, 130, 0.15);
             --inner-shadow: rgba(183, 110, 121, 0.05);
             --border-color: rgba(183, 110, 121, 0.2);
-            --modal-bg: rgba(255, 255, 255, 0.98);
+            --modal-bg: rgba(25, 255, 255, 0.98);
             --btn-grad: linear-gradient(135deg, #b76e79, #9c5863);
             --btn-text: #ffffff;
         }
@@ -404,16 +404,18 @@
             align-items: center;
             transition: all 0.2s ease;
             padding: 0;
+            opacity: 0.6;
         }
 
         .control-btn:active { transform: scale(0.85); }
-        .control-btn:hover { color: var(--accent-main); }
+        .control-btn:hover { color: var(--accent-main); opacity: 1; }
         
-        /* Fixed: Made repeat-active distinct from hover color */
+        /* Fixed Visual Conflict: Rose Pink color when Repeat is actually ON */
         .repeat-active {
-            color: var(--accent-main) !important;
-            filter: drop-shadow(0 0 12px var(--accent-main));
-            transform: scale(1.15);
+            color: var(--accent-sec) !important;
+            filter: drop-shadow(0 0 10px var(--accent-sec)) !important;
+            transform: scale(1.2) !important;
+            opacity: 1 !important;
         }
 
         .btn-main {
@@ -424,6 +426,7 @@
             color: var(--btn-text);
             box-shadow: 0 5px 15px var(--border-color);
             transition: transform 0.2s ease, background 1s ease, color 1s ease;
+            opacity: 1;
         }
 
         .btn-main:hover {
@@ -932,9 +935,9 @@ Ham tere chehare pe sitare dekhate hai." </p>
         const enterVaultBtn = document.getElementById('enter-vault-btn');
         const welcomeScreen = document.getElementById('welcome-screen');
 
-        enterVaultBtn.addEventListener('click', () => {
+        enterVaultBtn.addEventListener('click', function() {
             welcomeScreen.style.opacity = '0';
-            setTimeout(() => {
+            setTimeout(function() {
                 welcomeScreen.style.display = 'none';
             }, 2500); 
         });
@@ -1005,7 +1008,7 @@ Ham tere chehare pe sitare dekhate hai." </p>
             "मुझे अब तुम से डर लगने लगा है<br>तुम्हें मुझ से मोहब्बत हो गई क्या?",
             "अब मिरे पास तुम आई हो तो क्या आई हो<br>मैं ने तो ख़ुद को भी अब पास नहीं रक्खा है",
             "हम को बे-दार कर दिया किस ने<br>ख़्वाब ही ख़्वाब थे जहाँ हम थे",
-            "आप भी आ गए सताने को<br>अब तो बस ज़हर खा लिया जाए",
+            "आप भी आ गए सताने को<br>अब तो बस जहर खा लिया जाए",
             "हम तो अब याद भी नहीं करते<br>आप को भूलने की बात ही क्या",
             "सीना-ए-शौक़ में दरारें हैं<br>आज तो साँस भी नहीं आती",
             "इलाज ये है कि मजबूर कर दिया जाऊँ<br>वगरना यूँ तो किसी की नहीं सुनी मैं ने",
@@ -1016,7 +1019,7 @@ Ham tere chehare pe sitare dekhate hai." </p>
             "कोई हालत नहीं ये हालत है<br>ये तो आशोब-ए-ना-मुरादी है",
             "शौक़ की उम्र रायगाँ ही गई<br>आप ने भी तो कुछ नहीं चाहा",
             "तुम जो आए तो क्या मिला मुझ को<br>मेरी तन्हाई भी गई मुझ से",
-            "किस तरह छोड़ दूँ तुम्हें जाना<br>तुम मेरी ज़िंदगी की आदत हो",
+            "किस तरह छोड़ दूँ तुम्हें जाना<br>तुम मेरी ज़िंदगी की habit हो",
             "तुम हो पहलू में पर क़रार नहीं<br>यानी ऐसा है जैसे फ़ुरक़त हो",
             "अजब ख़ुलूस से रुख़्सत किया गया हम को<br>ख़याल-ए-ख़ाम का तावान था सो भर आए",
             "मुझ को ख़्वाहिश ही ढूँडने की न थी<br>मुझ में खोया रहा ख़ुदा मेरा",
@@ -1084,17 +1087,14 @@ Ham tere chehare pe sitare dekhate hai." </p>
         let headerTimeout;
         let isTransitioning = false;
 
-        headerInteractive.addEventListener('click', () => {
+        headerInteractive.addEventListener('click', function() {
             if (isTransitioning) return;
-            
             const randomQuote = getNextQuote();
             const formattedQuote = `"${randomQuote}"`;
-
             if (defaultTitle.style.display !== 'none') {
                 isTransitioning = true;
                 defaultTitle.style.opacity = '0';
-                
-                setTimeout(() => {
+                setTimeout(function() {
                     defaultTitle.style.display = 'none';
                     quoteTitle.innerHTML = formattedQuote;
                     quoteTitle.style.display = 'block';
@@ -1105,21 +1105,18 @@ Ham tere chehare pe sitare dekhate hai." </p>
             } else {
                 isTransitioning = true;
                 quoteTitle.style.opacity = '0';
-                
-                setTimeout(() => {
+                setTimeout(function() {
                     quoteTitle.innerHTML = formattedQuote;
                     void quoteTitle.offsetWidth; 
                     quoteTitle.style.opacity = '1';
                     isTransitioning = false;
                 }, 300);
             }
-
             clearTimeout(headerTimeout);
-            headerTimeout = setTimeout(() => {
+            headerTimeout = setTimeout(function() {
                 isTransitioning = true;
                 quoteTitle.style.opacity = '0';
-                
-                setTimeout(() => {
+                setTimeout(function() {
                     quoteTitle.style.display = 'none';
                     defaultTitle.style.display = 'flex';
                     void defaultTitle.offsetWidth; 
@@ -1129,17 +1126,16 @@ Ham tere chehare pe sitare dekhate hai." </p>
             }, 10000);
         });
 
-        // --- Theme Switcher ---
+        // --- Theme Switcher Logic ---
         const themeBtns = document.querySelectorAll('.theme-btn');
-        themeBtns.forEach(btn => {
-            btn.addEventListener('click', () => {
+        themeBtns.forEach(function(btn) {
+            btn.addEventListener('click', function() {
                 const theme = btn.getAttribute('data-set-theme');
                 if(theme === 'vault') {
                     document.documentElement.removeAttribute('data-theme');
                 } else {
                     document.documentElement.setAttribute('data-theme', theme);
                 }
-                
                 const percentage = (audio.currentTime / audio.duration) * 100;
                 if (!isNaN(percentage)) {
                     seekBar.style.background = `linear-gradient(to right, var(--accent-main) ${percentage}%, var(--border-color) ${percentage}%)`;
@@ -1149,39 +1145,34 @@ Ham tere chehare pe sitare dekhate hai." </p>
             });
         });
 
-        // --- Particles ---
+        // --- Ambient Particles ---
         function createParticles() {
             const particleContainer = document.getElementById('particles');
             const particleCount = 15; 
-            
             for(let i = 0; i < particleCount; i++) {
                 let particle = document.createElement('div');
                 particle.className = 'particle';
                 particle.innerHTML = `<svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>`;
-                
                 let size = Math.random() * 15 + 10; 
-                particle.style.width = `${size}px`;
-                particle.style.height = `${size}px`;
-                particle.style.left = `${Math.random() * 100}vw`;
-                particle.style.animationDuration = `${Math.random() * 10 + 10}s`; 
-                particle.style.animationDelay = `${Math.random() * 10}s`;
-                
+                particle.style.width = size + 'px';
+                particle.style.height = size + 'px';
+                particle.style.left = (Math.random() * 100) + 'vw';
+                particle.style.animationDuration = (Math.random() * 10 + 10) + 's'; 
+                particle.style.animationDelay = (Math.random() * 10) + 's';
                 particleContainer.appendChild(particle);
             }
         }
         createParticles();
 
-        // --- Playlist Logic ---
+        // --- Playlist Rendering & Drag Drop ---
         let draggedItemIndex = null;
-
         function renderPlaylist() {
             playlistContainer.innerHTML = '';
-            playlist.forEach((song, index) => {
+            playlist.forEach(function(song, index) {
                 const li = document.createElement('li');
-                li.className = `playlist-item ${index === songIndex ? 'playing' : ''}`;
+                li.className = 'playlist-item' + (index === songIndex ? ' playing' : '');
                 li.draggable = true;
                 li.dataset.index = index;
-                
                 li.innerHTML = `
                     <div class="drag-handle" aria-label="Drag to reorder">
                         <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
@@ -1201,26 +1192,22 @@ Ham tere chehare pe sitare dekhate hai." </p>
                         <path d="M12 3v18m-4-12v6m8-9v12m-12-3v-6m16 2v2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
                     </svg>
                 `;
-
-                li.querySelector('.item-info').onclick = () => {
+                li.querySelector('.item-info').onclick = function() {
                     songIndex = index;
                     loadSong(playlist[songIndex]);
                     playSong();
                 };
-
-                li.addEventListener('dragstart', (e) => {
+                li.addEventListener('dragstart', function(e) {
                     draggedItemIndex = index;
                     e.dataTransfer.effectAllowed = 'move';
-                    setTimeout(() => li.classList.add('dragging'), 0);
+                    setTimeout(function() { li.classList.add('dragging'); }, 0);
                 });
-
-                li.addEventListener('dragend', () => {
+                li.addEventListener('dragend', function() {
                     li.classList.remove('dragging');
                     draggedItemIndex = null;
-                    document.querySelectorAll('.playlist-item').forEach(el => el.classList.remove('drag-over'));
+                    document.querySelectorAll('.playlist-item').forEach(function(el) { el.classList.remove('drag-over'); });
                 });
-
-                li.addEventListener('dragover', (e) => {
+                li.addEventListener('dragover', function(e) {
                     e.preventDefault();
                     e.dataTransfer.dropEffect = 'move';
                     const draggingItem = document.querySelector('.dragging');
@@ -1228,19 +1215,15 @@ Ham tere chehare pe sitare dekhate hai." </p>
                         li.classList.add('drag-over');
                     }
                 });
-
-                li.addEventListener('dragleave', () => li.classList.remove('drag-over'));
-
-                li.addEventListener('drop', (e) => {
+                li.addEventListener('dragleave', function() { li.classList.remove('drag-over'); });
+                li.addEventListener('drop', function(e) {
                     e.preventDefault();
                     li.classList.remove('drag-over');
                     const dropIndex = parseInt(li.dataset.index);
                     if (draggedItemIndex === null || draggedItemIndex === dropIndex) return;
-
                     const draggedSong = playlist[draggedItemIndex];
                     playlist.splice(draggedItemIndex, 1);
                     playlist.splice(dropIndex, 0, draggedSong);
-
                     if (songIndex === draggedItemIndex) {
                         songIndex = dropIndex;
                     } else if (draggedItemIndex < songIndex && dropIndex >= songIndex) {
@@ -1250,7 +1233,6 @@ Ham tere chehare pe sitare dekhate hai." </p>
                     }
                     renderPlaylist();
                 });
-
                 playlistContainer.appendChild(li);
             });
         }
@@ -1259,29 +1241,26 @@ Ham tere chehare pe sitare dekhate hai." </p>
             if (isNaN(seconds) || seconds === Infinity) return "-:--";
             const mins = Math.floor(seconds / 60);
             const secs = Math.floor(seconds % 60);
-            return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+            return mins + ":" + (secs < 10 ? '0' : '') + secs;
         }
 
-        // --- Core Player Logic ---
+        // --- Core Player Functions ---
         function loadSong(song) {
             titleEl.innerText = song.title;
             artistEl.innerText = song.artist;
-            
             if(song.cover && song.cover.trim() !== "") {
-                recordCoverEl.style.backgroundImage = `url('${song.cover}')`;
+                recordCoverEl.style.backgroundImage = "url('" + song.cover + "')";
             } else {
                 recordCoverEl.style.backgroundImage = 'var(--btn-grad)';
             }
-
             audio.src = song.src;
-            // Technical Fix: Strictly sync audio.loop with our toggle state
+            // Technical Correction: Always update loop status when loading a new song
             audio.loop = isRepeating; 
             renderPlaylist();
-
             seekBar.value = 0;
             currentTimeEl.innerText = "-:--";
             durationEl.innerText = "-:--";
-            seekBar.style.background = `var(--border-color)`;
+            seekBar.style.background = 'var(--border-color)';
         }
 
         function playSong() {
@@ -1289,10 +1268,9 @@ Ham tere chehare pe sitare dekhate hai." </p>
             playIcon.style.display = 'none';
             pauseIcon.style.display = 'block';
             recordEl.classList.add('spin');
-            
             const playPromise = audio.play();
             if (playPromise !== undefined) {
-                playPromise.catch(() => console.log("Audio blocked or missing."));
+                playPromise.catch(function() { console.log("Audio file blocked or missing."); });
             }
         }
 
@@ -1305,64 +1283,83 @@ Ham tere chehare pe sitare dekhate hai." </p>
         }
 
         function prevSong() {
-            songIndex = (songIndex - 1 + playlist.length) % playlist.length;
+            songIndex--;
+            if (songIndex < 0) {
+                songIndex = playlist.length - 1;
+            }
             loadSong(playlist[songIndex]);
-            if (isPlaying) playSong();
+            if (isPlaying) {
+                playSong();
+            }
         }
 
         function nextSong() {
-            songIndex = (songIndex + 1) % playlist.length;
+            songIndex++;
+            if (songIndex > playlist.length - 1) {
+                songIndex = 0;
+            }
             loadSong(playlist[songIndex]);
-            if (isPlaying) playSong();
+            if (isPlaying) {
+                playSong();
+            }
         }
 
-        playBtn.addEventListener('click', () => isPlaying ? pauseSong() : playSong());
+        playBtn.addEventListener('click', function() {
+            if (isPlaying) {
+                pauseSong();
+            } else {
+                playSong();
+            }
+        });
+
         prevBtn.addEventListener('click', prevSong);
         nextBtn.addEventListener('click', nextSong);
 
-        // --- Technical Fix: Repeat Toggle and Ended Logic ---
-        repeatBtn.addEventListener('click', () => {
-            // Toggle logical state
+        // --- THE FIXED REPEAT LOGIC ---
+        repeatBtn.addEventListener('click', function(e) {
+            // Toggle the logic state
             isRepeating = !isRepeating;
             
-            // Sync audio property
+            // Apply it to the actual audio element
             audio.loop = isRepeating; 
             
-            // Technical Fix: Explicit class update to prevent hover-visual-ghosting
+            // Explicitly sync the visual highlight
             if (isRepeating) {
+                // If ON: Add the pink active class
                 repeatBtn.classList.add('repeat-active');
             } else {
+                // If OFF: Remove the class immediately
                 repeatBtn.classList.remove('repeat-active');
             }
         });
 
-        audio.addEventListener('ended', () => {
-            // Note: If audio.loop is true, this event usually won't fire.
-            // This acts as a safety fallback.
-            if (!isRepeating) {
-                nextSong();
+        audio.addEventListener('ended', function() {
+            // Safety fallback if loop attribute fails in some browsers
+            if (isRepeating) {
+                audio.currentTime = 0;
+                playSong();
             } else {
-                playSong(); // Loop manually if browser fails loop attribute
+                nextSong();
             }
         });
 
-        // --- SeekBar Logic ---
-        audio.addEventListener('loadedmetadata', () => {
+        // --- Seek Bar Logic ---
+        audio.addEventListener('loadedmetadata', function() {
             seekBar.max = audio.duration;
             durationEl.innerText = formatTime(audio.duration);
             currentTimeEl.innerText = formatTime(0);
         });
 
-        audio.addEventListener('timeupdate', () => {
+        audio.addEventListener('timeupdate', function() {
             seekBar.value = audio.currentTime;
             currentTimeEl.innerText = formatTime(audio.currentTime);
             const percentage = (audio.currentTime / audio.duration) * 100;
             if (!isNaN(percentage)) {
-                seekBar.style.background = `linear-gradient(to right, var(--accent-main) ${percentage}%, var(--border-color) ${percentage}%)`;
+                seekBar.style.background = "linear-gradient(to right, var(--accent-main) " + percentage + "%, var(--border-color) " + percentage + "%)";
             }
         });
 
-        seekBar.addEventListener('input', () => {
+        seekBar.addEventListener('input', function() {
             audio.currentTime = seekBar.value;
             currentTimeEl.innerText = formatTime(seekBar.value);
         });
@@ -1371,21 +1368,27 @@ Ham tere chehare pe sitare dekhate hai." </p>
         const letterBtn = document.getElementById('love-letter-btn');
         const letterModal = document.getElementById('letter-modal');
         const closeLetterBtn = document.getElementById('close-letter');
-
-        letterBtn.addEventListener('click', () => letterModal.classList.add('show'));
-        closeLetterBtn.addEventListener('click', () => letterModal.classList.remove('show'));
+        
+        letterBtn.addEventListener('click', function() { letterModal.classList.add('show'); });
+        closeLetterBtn.addEventListener('click', function() { letterModal.classList.remove('show'); });
 
         let intentToLeave = false;
         history.pushState(null, null, location.href);
-        window.addEventListener('popstate', () => {
+        window.addEventListener('popstate', function() {
             if (intentToLeave) return; 
             document.getElementById('exit-quote-text').innerHTML = `"${getNextQuote()}"`;
             document.getElementById('exit-modal').classList.add('show');
             history.pushState(null, null, location.href);
         });
 
-        document.getElementById('stay-btn').addEventListener('click', () => document.getElementById('exit-modal').classList.remove('show'));
-        document.getElementById('leave-btn').addEventListener('click', () => { intentToLeave = true; history.back(); });
+        document.getElementById('stay-btn').addEventListener('click', function() {
+            document.getElementById('exit-modal').classList.remove('show');
+        });
+
+        document.getElementById('leave-btn').addEventListener('click', function() {
+            intentToLeave = true;
+            history.back(); 
+        });
 
         loadSong(playlist[songIndex]);
     </script>
