@@ -4,18 +4,93 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Aarzoo - آرزو</title>
-    <!-- Importing an elegant font from Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Montserrat:wght@300;400;500&family=Noto+Nastaliq+Urdu:wght@400;700&display=swap" rel="stylesheet">
+    <!-- Importing ultra-premium fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Jost:wght@300;400;500&family=Noto+Nastaliq+Urdu:wght@400;700&display=swap" rel="stylesheet">
     
     <style>
         :root {
-            /* Deep, romantic velvet/maroon vault theme */
+            /* Default: Deep, romantic velvet/maroon vault theme */
             --bg-color: #080303; 
-            --card-bg: rgba(35, 15, 15, 0.7); 
-            --accent-gold: #d4af37; 
-            --accent-rose: #a62b32;
+            --bg-gradient: radial-gradient(circle at top, #3a1518 0%, #080303 80%);
+            --card-bg: rgba(35, 15, 15, 0.6); 
+            --accent-main: #d4af37; /* Gold */
+            --accent-sec: #a62b32; /* Rose */
             --text-main: #fdfbf7; 
             --text-sub: #b59b9b;
+            --shadow-color: rgba(0, 0, 0, 0.8);
+            --inner-shadow: rgba(166, 43, 50, 0.1);
+            --border-color: rgba(212, 175, 55, 0.2);
+            --modal-bg: rgba(25, 10, 10, 0.95);
+            --btn-grad: linear-gradient(135deg, #d4af37, #aa8623);
+            --btn-text: #1c0f0f;
+        }
+
+        /* Theme: Elegant White */
+        [data-theme="white"] {
+            --bg-color: #fcfbf9;
+            --bg-gradient: radial-gradient(circle at top, #ffffff 0%, #f0ece6 80%);
+            --card-bg: rgba(255, 255, 255, 0.75);
+            --accent-main: #b76e79; /* Rose Gold */
+            --accent-sec: #e6d3d6;
+            --text-main: #332b2b;
+            --text-sub: #8a7b7b;
+            --shadow-color: rgba(150, 140, 130, 0.15);
+            --inner-shadow: rgba(183, 110, 121, 0.05);
+            --border-color: rgba(183, 110, 121, 0.2);
+            --modal-bg: rgba(255, 255, 255, 0.98);
+            --btn-grad: linear-gradient(135deg, #b76e79, #9c5863);
+            --btn-text: #ffffff;
+        }
+
+        /* Theme: Pure Black Minimalist */
+        [data-theme="black"] {
+            --bg-color: #050505;
+            --bg-gradient: radial-gradient(circle at top, #1a1a1a 0%, #000000 80%);
+            --card-bg: rgba(20, 20, 20, 0.6);
+            --accent-main: #e0e0e0; /* Silver */
+            --accent-sec: #333333;
+            --text-main: #ffffff;
+            --text-sub: #888888;
+            --shadow-color: rgba(0, 0, 0, 0.9);
+            --inner-shadow: rgba(255, 255, 255, 0.02);
+            --border-color: rgba(255, 255, 255, 0.1);
+            --modal-bg: rgba(15, 15, 15, 0.95);
+            --btn-grad: linear-gradient(135deg, #ffffff, #cccccc);
+            --btn-text: #000000;
+        }
+
+        /* Theme: Soft Calm Blue */
+        [data-theme="blue"] {
+            --bg-color: #070e17;
+            --bg-gradient: radial-gradient(circle at top, #172a45 0%, #070e17 80%);
+            --card-bg: rgba(16, 29, 52, 0.6);
+            --accent-main: #a3c2ff; /* Soft Pastel Blue */
+            --accent-sec: #233554;
+            --text-main: #e6f1ff;
+            --text-sub: #8892b0;
+            --shadow-color: rgba(2, 12, 27, 0.8);
+            --inner-shadow: rgba(163, 194, 255, 0.05);
+            --border-color: rgba(163, 194, 255, 0.2);
+            --modal-bg: rgba(10, 25, 47, 0.95);
+            --btn-grad: linear-gradient(135deg, #a3c2ff, #739ce6);
+            --btn-text: #070e17;
+        }
+
+        /* Theme: Soft Romantic Pink */
+        [data-theme="pink"] {
+            --bg-color: #fdf5f6;
+            --bg-gradient: radial-gradient(circle at top, #ffffff 0%, #fadce4 80%);
+            --card-bg: rgba(255, 255, 255, 0.6);
+            --accent-main: #c97a8e; /* Deep Rose Pink */
+            --accent-sec: #f2b6c6;
+            --text-main: #5c3f46;
+            --text-sub: #a88a91;
+            --shadow-color: rgba(200, 160, 170, 0.2);
+            --inner-shadow: rgba(201, 122, 142, 0.05);
+            --border-color: rgba(201, 122, 142, 0.2);
+            --modal-bg: rgba(255, 250, 251, 0.98);
+            --btn-grad: linear-gradient(135deg, #c97a8e, #a86173);
+            --btn-text: #ffffff;
         }
 
         * {
@@ -25,7 +100,8 @@
         }
 
         body {
-            font-family: 'Montserrat', sans-serif;
+            font-family: 'Jost', sans-serif;
+            background: var(--bg-gradient);
             background-color: var(--bg-color);
             color: var(--text-main);
             display: flex;
@@ -33,10 +109,77 @@
             align-items: center;
             height: 100vh;
             margin: 0;
-            /* Premium dark vignette background */
-            background: radial-gradient(circle at top, #3a1518 0%, #080303 80%);
             overflow: hidden; 
+            transition: background 1s ease, color 1s ease;
         }
+
+        /* --- Ambient Hearts (Particles) --- */
+        #particles {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .particle {
+            position: absolute;
+            color: var(--accent-main);
+            filter: drop-shadow(0 0 5px var(--border-color));
+            opacity: 0;
+            animation: floatUp linear infinite;
+            transition: color 1s ease;
+        }
+
+        .particle svg {
+            width: 100%;
+            height: 100%;
+            fill: currentColor;
+        }
+
+        @keyframes floatUp {
+            0% { transform: translateY(100vh) scale(0.5); opacity: 0; }
+            20% { opacity: 0.6; }
+            80% { opacity: 0.4; }
+            100% { transform: translateY(-10vh) scale(1.2); opacity: 0; }
+        }
+
+        /* --- Intro Welcome Screen --- */
+        #welcome-screen {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--bg-gradient);
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            transition: opacity 2.5s ease;
+        }
+
+        .welcome-text {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 2.2rem;
+            color: var(--accent-main);
+            font-style: italic;
+            opacity: 0;
+            animation: slowFadeIn 3s forwards 0.5s;
+            text-align: center;
+            padding: 0 20px;
+        }
+
+        .welcome-sub {
+            font-family: 'Jost', sans-serif;
+            font-size: 0.8rem;
+            letter-spacing: 4px;
+            color: var(--text-sub);
+            margin-top: 15px;
+            opacity: 0;
+            animation: slowFadeIn 3s forwards 1.5s;
+            text-transform: uppercase;
+        }
+
+        @keyframes slowFadeIn { to { opacity: 1; } }
 
         .app-wrapper {
             width: 100%;
@@ -45,70 +188,136 @@
             max-height: 900px;
             display: flex;
             flex-direction: column;
-            padding: 2rem 1.5rem;
+            padding: 2.5rem 1.5rem 1.5rem 1.5rem;
             position: relative;
+            z-index: 1;
         }
 
-        /* --- Header Section --- */
+        /* --- Theme Switcher --- */
+        .theme-selector {
+            position: absolute;
+            top: 1.5rem;
+            left: 1.5rem;
+            display: flex;
+            gap: 8px;
+            z-index: 10;
+        }
+
+        .theme-btn {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            border: 1px solid rgba(128,128,128,0.3);
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .theme-btn:hover {
+            transform: scale(1.3);
+            box-shadow: 0 0 8px currentColor;
+        }
+
+        /* --- Easter Egg (Hidden Letter Button) --- */
+        #love-letter-btn {
+            position: absolute;
+            top: 1.2rem;
+            right: 1.5rem;
+            background: none;
+            border: none;
+            color: var(--accent-main);
+            opacity: 0.4;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            z-index: 10;
+        }
+
+        #love-letter-btn:hover {
+            opacity: 1;
+            transform: scale(1.1);
+            filter: drop-shadow(0 0 10px var(--border-color));
+        }
+
+        #love-letter-btn svg { width: 24px; height: 24px; fill: currentColor; }
+
+        /* --- Artistic Header Section --- */
         .header {
             text-align: center;
             margin-bottom: 2rem;
-            margin-top: 1rem;
+            margin-top: 1.5rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
         }
 
         .app-title {
             font-family: 'Noto Nastaliq Urdu', serif;
             font-size: 3.5rem;
-            color: var(--accent-gold);
-            text-shadow: 0 0 20px rgba(212, 175, 55, 0.4);
+            color: var(--accent-main);
+            text-shadow: 0 0 20px var(--border-color);
             line-height: 1.2;
             margin-bottom: 0.2rem;
+            transition: color 1s ease, text-shadow 1s ease;
         }
+
+        .floral-accent {
+            width: 35px;
+            height: 35px;
+            color: var(--accent-main);
+            opacity: 0.8;
+            transition: color 1s ease;
+        }
+
+        .floral-accent.left { transform: scaleX(-1); }
 
         /* --- Main Player Card (The Sleeve) --- */
         .player-card {
             background: var(--card-bg);
             backdrop-filter: blur(15px);
-            border: 1px solid rgba(212, 175, 55, 0.2);
+            border: 1px solid var(--border-color);
             border-radius: 24px;
             padding: 1.5rem;
             display: flex;
             align-items: center;
             position: relative;
-            overflow: hidden; /* This hides the right half of the record */
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.8), inset 0 0 20px rgba(166, 43, 50, 0.1);
+            overflow: hidden;
+            box-shadow: 0 15px 35px var(--shadow-color), inset 0 0 20px var(--inner-shadow);
             margin-bottom: 2rem;
-            min-height: 180px;
+            min-height: 180px; 
+            transition: background 1s ease, box-shadow 1s ease, border-color 1s ease;
         }
 
         /* Left Side (70%) - Details & Controls */
         .player-left {
             width: 70%;
-            z-index: 2; /* Keeps text above the record */
+            z-index: 2;
             display: flex;
             flex-direction: column;
             padding-right: 10px;
         }
 
         .song-title {
-            font-family: 'Playfair Display', serif;
-            font-size: 1.4rem;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.6rem;
             font-weight: 700;
-            color: var(--accent-gold);
+            color: var(--accent-main);
             margin-bottom: 0.2rem;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+            text-shadow: 0 2px 4px var(--shadow-color);
+            transition: color 1s ease;
         }
 
         .song-artist {
-            font-size: 0.8rem;
+            font-family: 'Jost', sans-serif;
+            font-size: 0.75rem;
             color: var(--text-sub);
-            letter-spacing: 1px;
+            letter-spacing: 2px;
             text-transform: uppercase;
             font-weight: 400;
-            margin-bottom: 1rem;
+            margin-bottom: 1.5rem;
+            transition: color 1s ease;
         }
 
         /* Progress Bar */
@@ -121,7 +330,8 @@
         }
 
         .progress-container span {
-            font-size: 0.65rem;
+            font-family: 'Jost', sans-serif;
+            font-size: 0.7rem;
             color: var(--text-sub);
             min-width: 28px;
             font-variant-numeric: tabular-nums;
@@ -131,11 +341,12 @@
             flex-grow: 1;
             -webkit-appearance: none;
             appearance: none;
-            background: rgba(212, 175, 55, 0.15);
+            background: var(--border-color);
             height: 3px;
             border-radius: 2px;
             outline: none;
             cursor: pointer;
+            transition: background 1s ease;
         }
 
         #seek-bar::-webkit-slider-thumb {
@@ -144,9 +355,9 @@
             width: 10px;
             height: 10px;
             border-radius: 50%;
-            background: var(--accent-gold);
+            background: var(--accent-main);
             cursor: pointer;
-            box-shadow: 0 0 8px rgba(212, 175, 55, 0.8);
+            box-shadow: 0 0 8px var(--border-color);
         }
 
         /* Controls inside the card */
@@ -170,50 +381,41 @@
         }
 
         .control-btn:active { transform: scale(0.85); }
-        .control-btn:hover { color: var(--accent-gold); }
+        .control-btn:hover { color: var(--accent-main); }
         
         .repeat-active {
-            color: var(--accent-gold);
-            filter: drop-shadow(0 0 5px rgba(212, 175, 55, 0.5));
+            color: var(--accent-main);
+            filter: drop-shadow(0 0 5px var(--border-color));
         }
 
         .btn-main {
             width: 45px;
             height: 45px;
             border-radius: 50%;
-            background-color: var(--accent-gold);
-            color: #1c0f0f;
-            box-shadow: 0 5px 15px rgba(212, 175, 55, 0.3);
+            background: var(--btn-grad);
+            color: var(--btn-text);
+            box-shadow: 0 5px 15px var(--border-color);
+            transition: transform 0.2s ease, background 1s ease, color 1s ease;
         }
 
         .btn-main:hover {
-            background-color: #ebd076;
             transform: translateY(-2px);
         }
 
-        .controls svg {
-            width: 20px;
-            height: 20px;
-            fill: currentColor;
-        }
-
-        .btn-main svg {
-            width: 24px;
-            height: 24px;
-            margin-left: 2px;
-        }
+        .controls svg { width: 20px; height: 20px; fill: currentColor; }
+        .btn-main svg { width: 24px; height: 24px; margin-left: 2px; }
         #pause-icon { margin-left: 0; }
 
         /* Right Side (30%) - The Tucked Record */
         .player-right {
             position: absolute;
-            right: -60px; /* Pushes the record halfway out of the card */
+            right: -60px; 
             top: 50%;
             transform: translateY(-50%);
             width: 180px;
             height: 180px;
             z-index: 1;
-            pointer-events: none; /* So clicks don't interfere */
+            pointer-events: none;
         }
 
         .record-container {
@@ -221,10 +423,7 @@
             height: 100%;
             border-radius: 50%;
             background: repeating-radial-gradient(
-                #0a0a0a,
-                #0a0a0a 4px,
-                #1a1a1a 5px,
-                #0a0a0a 6px
+                #0a0a0a, #0a0a0a 4px, #1a1a1a 5px, #0a0a0a 6px
             );
             box-shadow: -5px 0 15px rgba(0,0,0,0.6), inset 0 0 10px rgba(0,0,0,0.8);
             display: flex;
@@ -236,30 +435,30 @@
         .record-container::after {
             content: '';
             position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
+            inset: 0;
             border-radius: 50%;
             background: conic-gradient(
-                from 0deg,
-                transparent 0deg,
-                rgba(255,255,255,0.06) 45deg,
-                transparent 90deg,
-                transparent 180deg,
-                rgba(255,255,255,0.06) 225deg,
-                transparent 270deg,
-                transparent 360deg
+                from 0deg, transparent 0deg, rgba(255,255,255,0.06) 45deg,
+                transparent 90deg, transparent 180deg, rgba(255,255,255,0.06) 225deg,
+                transparent 270deg, transparent 360deg
             );
         }
 
         .record-label {
-            width: 60px;
-            height: 60px;
-            background-color: var(--accent-gold);
-            background-image: linear-gradient(135deg, #d4af37 0%, #aa8623 100%);
+            width: 65px;
+            height: 65px;
+            background-color: var(--accent-main); 
+            background-image: var(--btn-grad);
+            background-size: cover;
+            background-position: center;
             border-radius: 50%;
             display: flex;
             justify-content: center;
             align-items: center;
             border: 2px solid #111;
+            box-shadow: 0 0 10px rgba(0,0,0,0.8);
+            position: relative;
+            transition: background 1s ease;
         }
 
         .record-hole {
@@ -267,28 +466,24 @@
             height: 8px;
             background-color: #000;
             border-radius: 50%;
+            box-shadow: inset 0 0 2px rgba(255,255,255,0.2);
+            z-index: 2;
         }
 
-        .spin {
-            animation: spinRecord 4s linear infinite;
-        }
-
-        @keyframes spinRecord {
-            100% { transform: rotate(360deg); }
-        }
+        .spin { animation: spinRecord 4s linear infinite; }
+        @keyframes spinRecord { 100% { transform: rotate(360deg); } }
 
         /* --- Playlist Section --- */
         .playlist-wrapper {
             flex-grow: 1;
             overflow-y: auto;
             padding-right: 5px;
-            /* Custom scrollbar */
             scrollbar-width: thin;
-            scrollbar-color: var(--accent-rose) transparent;
+            scrollbar-color: var(--accent-sec) transparent;
         }
         
         .playlist-wrapper::-webkit-scrollbar { width: 4px; }
-        .playlist-wrapper::-webkit-scrollbar-thumb { background-color: var(--accent-rose); border-radius: 4px; }
+        .playlist-wrapper::-webkit-scrollbar-thumb { background-color: var(--accent-sec); border-radius: 4px; }
 
         .playlist-title {
             font-size: 0.75rem;
@@ -296,8 +491,9 @@
             text-transform: uppercase;
             letter-spacing: 3px;
             margin-bottom: 1rem;
-            border-bottom: 1px solid rgba(212, 175, 55, 0.1);
+            border-bottom: 1px solid var(--border-color);
             padding-bottom: 0.5rem;
+            transition: border-color 1s ease, color 1s ease;
         }
 
         .playlist-list {
@@ -311,7 +507,7 @@
             display: flex;
             align-items: center;
             padding: 12px 15px;
-            background: rgba(255, 255, 255, 0.02);
+            background: rgba(128, 128, 128, 0.05);
             border-radius: 16px;
             cursor: pointer;
             transition: all 0.3s ease;
@@ -319,142 +515,216 @@
         }
 
         .playlist-item:hover {
-            background: rgba(255, 255, 255, 0.05);
+            background: rgba(128, 128, 128, 0.1);
             transform: translateX(5px);
         }
 
         .playlist-item.playing {
-            background: rgba(166, 43, 50, 0.15);
-            border-color: rgba(166, 43, 50, 0.3);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            background: var(--border-color);
+            border-color: var(--inner-shadow);
+            box-shadow: 0 4px 15px var(--shadow-color);
         }
 
-        .item-info {
-            display: flex;
-            flex-direction: column;
-        }
+        .item-info { display: flex; flex-direction: column; }
 
         .playlist-item-title {
-            font-family: 'Playfair Display', serif;
-            font-size: 1.05rem;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.2rem;
+            font-weight: 600;
             color: var(--text-main);
             margin-bottom: 3px;
+            transition: color 1s ease;
         }
 
         .playlist-item.playing .playlist-item-title {
-            color: var(--accent-gold);
+            color: var(--accent-main);
             font-style: italic;
         }
 
-        .playlist-item-artist {
-            font-size: 0.7rem;
-            color: var(--text-sub);
-        }
+        .playlist-item-artist { font-size: 0.7rem; color: var(--text-sub); text-transform: uppercase; letter-spacing: 1px; }
 
-        /* Playing indicator icon */
         .playing-icon {
             margin-left: auto;
-            color: var(--accent-gold);
+            color: var(--accent-main);
             opacity: 0;
             width: 16px;
             height: 16px;
+            transition: color 1s ease;
         }
 
-        .playlist-item.playing .playing-icon {
-            opacity: 1;
-        }
+        .playlist-item.playing .playing-icon { opacity: 1; }
 
-        /* --- Exit Warning Modal --- */
+        /* --- Modals (Exit & Love Letter) --- */
         .modal-overlay {
             position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0, 0, 0, 0.85);
+            inset: 0;
+            background: rgba(0, 0, 0, 0.7);
             backdrop-filter: blur(8px);
             display: none;
             justify-content: center;
             align-items: center;
             z-index: 100;
             opacity: 0;
-            transition: opacity 0.3s ease;
+            transition: opacity 0.4s ease;
+            padding: 20px;
         }
 
-        .modal-overlay.show {
-            display: flex;
-            opacity: 1;
-        }
+        .modal-overlay.show { display: flex; opacity: 1; }
 
         .modal-content {
-            background: rgba(35, 15, 15, 0.95);
+            background: var(--modal-bg);
             padding: 2.5rem 2rem;
             border-radius: 24px;
             text-align: center;
-            max-width: 320px;
-            border: 1px solid rgba(166, 43, 50, 0.4);
-            box-shadow: 0 20px 50px rgba(0,0,0,0.9);
+            max-width: 340px;
+            width: 100%;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 20px 50px var(--shadow-color), inset 0 0 30px var(--inner-shadow);
+            transform: translateY(20px);
+            transition: transform 0.4s ease, background 1s ease, border-color 1s ease;
         }
+
+        .modal-overlay.show .modal-content { transform: translateY(0); }
+
+        .letter-content {
+            text-align: left;
+            max-height: 60vh;
+            overflow-y: auto;
+            padding-right: 10px;
+            scrollbar-width: thin;
+            scrollbar-color: var(--accent-main) transparent;
+        }
+
+        .letter-content::-webkit-scrollbar { width: 3px; }
+        .letter-content::-webkit-scrollbar-thumb { background-color: var(--accent-main); }
 
         .modal-content h3 {
-            font-family: 'Playfair Display', serif;
-            color: var(--accent-gold);
-            font-size: 1.5rem;
+            font-family: 'Cormorant Garamond', serif;
+            color: var(--accent-main);
+            font-size: 2rem;
             margin-bottom: 1rem;
+            font-style: italic;
+            transition: color 1s ease;
         }
 
-        .modal-content p {
-            font-size: 0.9rem;
+        .letter-content p {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.1rem;
             color: var(--text-main);
-            margin-bottom: 2rem;
-            line-height: 1.6;
+            margin-bottom: 1.2rem;
+            line-height: 1.8;
+            transition: color 1s ease;
+        }
+
+        .letter-content p.sign-off {
+            text-align: right;
+            color: var(--accent-main);
+            font-style: italic;
+            margin-top: 2rem;
         }
 
         .modal-buttons {
             display: flex;
             flex-direction: column;
             gap: 12px;
+            margin-top: 2rem;
         }
 
         .btn-stay {
-            background: linear-gradient(135deg, var(--accent-gold), #aa8623);
-            color: #1c0f0f;
+            background: var(--btn-grad);
+            color: var(--btn-text);
             padding: 14px;
             border-radius: 12px;
-            font-weight: 600;
+            font-weight: 500;
             border: none;
             cursor: pointer;
-            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.2);
+            box-shadow: 0 4px 15px var(--border-color);
+            font-family: 'Jost', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-size: 0.8rem;
+            transition: transform 0.2s, background 1s ease, color 1s ease;
         }
+
+        .btn-stay:active { transform: scale(0.95); }
 
         .btn-leave {
             background: transparent;
             color: var(--text-sub);
             padding: 12px;
-            border: 1px solid rgba(255,255,255,0.1);
+            border: 1px solid var(--text-sub);
             border-radius: 12px;
             cursor: pointer;
+            font-family: 'Jost', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-size: 0.75rem;
+            transition: color 1s ease, border-color 1s ease;
         }
+        
+        #close-letter { margin-top: 0; }
     </style>
 </head>
 <body>
 
+    <!-- Intro Welcome Screen -->
+    <div id="welcome-screen">
+        <h1 class="welcome-text">A secret place,<br>just for you...</h1>
+        <div class="welcome-sub">Unlocking Vault</div>
+    </div>
+
+    <!-- Ambient Floating Hearts -->
+    <div id="particles"></div>
+
     <div class="app-wrapper">
         
-        <!-- Header Section -->
+        <!-- Theme Switcher -->
+        <div class="theme-selector">
+            <button class="theme-btn" data-set-theme="vault" style="background: #3a1518; color: #d4af37;" aria-label="Vault Theme"></button>
+            <button class="theme-btn" data-set-theme="white" style="background: #f8f5f2; color: #b76e79;" aria-label="White Theme"></button>
+            <button class="theme-btn" data-set-theme="black" style="background: #111111; color: #e0e0e0;" aria-label="Black Theme"></button>
+            <button class="theme-btn" data-set-theme="blue"  style="background: #1c2b59; color: #a3c2ff;" aria-label="Blue Theme"></button>
+            <button class="theme-btn" data-set-theme="pink"  style="background: #fadce4; color: #c97a8e;" aria-label="Pink Theme"></button>
+        </div>
+
+        <!-- Easter Egg Button -->
+        <button id="love-letter-btn" aria-label="A letter for you">
+            <svg viewBox="0 0 24 24">
+                <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+            </svg>
+        </button>
+
+        <!-- Artistic Header -->
         <header class="header">
+            <!-- Elegant Botanical SVG Flourish (Left) -->
+            <svg class="floral-accent left" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 22c-4-4-6-8-6-12a6 6 0 0 1 12 0c0 4-2 8-6 12z" fill="currentColor" opacity="0.15"/>
+                <path d="M12 22V10"/>
+                <path d="M12 10a4 4 0 0 0-4-4 4 4 0 0 0-4 4c0 4 4 8 8 12 4-4 8-8 8-12a4 4 0 0 0-4-4 4 4 0 0 0-4 4z"/>
+            </svg>
+
             <h1 class="app-title">آرزو</h1>
+
+            <!-- Elegant Botanical SVG Flourish (Right) -->
+            <svg class="floral-accent right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 22c-4-4-6-8-6-12a6 6 0 0 1 12 0c0 4-2 8-6 12z" fill="currentColor" opacity="0.15"/>
+                <path d="M12 22V10"/>
+                <path d="M12 10a4 4 0 0 0-4-4 4 4 0 0 0-4 4c0 4 4 8 8 12 4-4 8-8 8-12a4 4 0 0 0-4-4 4 4 0 0 0-4 4z"/>
+            </svg>
         </header>
 
-        <!-- Main Player Card (The Sleeve) -->
+        <!-- Main Player Card -->
         <div class="player-card">
             
-            <!-- Left Side: Details & Controls (70%) -->
+            <!-- Left Side: Details & Controls -->
             <div class="player-left">
                 <h2 class="song-title" id="title">Loading...</h2>
                 <p class="song-artist" id="artist">...</p>
                 
                 <div class="progress-container">
-                    <span id="current-time">0:00</span>
+                    <span id="current-time">-:--</span>
                     <input type="range" id="seek-bar" value="0" min="0" step="1">
-                    <span id="duration">0:00</span>
+                    <span id="duration">-:--</span>
                 </div>
 
                 <div class="controls">
@@ -474,10 +744,10 @@
                 </div>
             </div>
 
-            <!-- Right Side: The Record (30%) -->
+            <!-- Right Side: The Record -->
             <div class="player-right">
                 <div class="record-container" id="record">
-                    <div class="record-label">
+                    <div class="record-label" id="record-cover">
                         <div class="record-hole"></div>
                     </div>
                 </div>
@@ -485,7 +755,7 @@
 
         </div>
 
-        <!-- Scrollable Playlist Section -->
+        <!-- Playlist -->
         <div class="playlist-wrapper">
             <p class="playlist-title">Inside the Vault</p>
             <ul class="playlist-list" id="playlist-container">
@@ -493,16 +763,32 @@
             </ul>
         </div>
 
-        <!-- Audio Element (Hidden) -->
         <audio id="audio"></audio>
-
     </div>
 
-    <!-- Loving Warning Modal -->
+    <!-- Hidden Love Letter Modal -->
+    <div id="letter-modal" class="modal-overlay">
+        <div class="modal-content">
+            <h3>My Dearest...</h3>
+            <div class="letter-content">
+                <p>If you're reading this, you found my little secret hidden in this vault.</p>
+                <p>I built this place so that whenever you miss me, or whenever you need to feel loved, you can come here. Every song in this playlist reminds me of a piece of you, of us.</p>
+                <p>Music has a way of saying what words sometimes can't, but I wanted to make sure you had my words too. You are my most beautiful <i>Aarzoo</i>.</p>
+                <p class="sign-off">Yours always,<br>[Your Name]</p>
+            </div>
+            <div class="modal-buttons">
+                <button id="close-letter" class="btn-stay">Close Letter</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Exit Warning Modal -->
     <div id="exit-modal" class="modal-overlay">
         <div class="modal-content">
             <h3>Leaving so soon? 🌹</h3>
-            <p>Are you sure you want to leave your secret vault? The music will stop playing if you go.</p>
+            <div class="letter-content" style="text-align: center;">
+                <p style="margin-bottom: 0;">Are you sure you want to leave your secret vault? The music will stop if you go.</p>
+            </div>
             <div class="modal-buttons">
                 <button id="stay-btn" class="btn-stay">I'll Stay Here</button>
                 <button id="leave-btn" class="btn-leave">I Have To Go</button>
@@ -512,18 +798,26 @@
 
     <script>
         // ==========================================
-        // 🎵 YOUR PLAYLIST "SLOT" 🎵
+        // 🎵 YOUR PLAYLIST & MESSAGES 🎵
         // ==========================================
         const playlist = [
             {
-                title: "Ye Hawa Ye Raat Ye Chandani",
+                title: "Ye Hawa Ye Raat",
                 artist: "Talat Mahmood",
-                src: "Ye hawa ye raat ye chandani.mp3"
+                src: "Ye hawa ye raat ye chandani.mp3",
+                cover: "" 
             },
             {
-                title: "Aye dil mujhe aisi jagah le chal",
+                title: "Aye dil mujhe aisi jagah",
                 artist: "Talat Mahmood",
-                src: "Aye dil mujhe aisi jagah le chal.mp3"
+                src: "Aye dil mujhe aisi jagah le chal.mp3",
+                cover: "" 
+            },
+            {
+                title: "Your 3rd Song Here",
+                artist: "Artist Name",
+                src: "song3.mp3",
+                cover: ""
             }
         ];
         // ==========================================
@@ -533,14 +827,15 @@
         const prevBtn = document.getElementById('prev');
         const nextBtn = document.getElementById('next');
         const repeatBtn = document.getElementById('repeat');
+        
         const titleEl = document.getElementById('title');
         const artistEl = document.getElementById('artist');
         const recordEl = document.getElementById('record');
+        const recordCoverEl = document.getElementById('record-cover');
         const playIcon = document.getElementById('play-icon');
         const pauseIcon = document.getElementById('pause-icon');
         const playlistContainer = document.getElementById('playlist-container');
         
-        // Progress bar elements
         const seekBar = document.getElementById('seek-bar');
         const currentTimeEl = document.getElementById('current-time');
         const durationEl = document.getElementById('duration');
@@ -549,13 +844,67 @@
         let isPlaying = false;
         let isRepeating = false;
 
-        // --- Render the Visible Playlist ---
+        // --- Theme Switcher Logic ---
+        const themeBtns = document.querySelectorAll('.theme-btn');
+        themeBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const theme = btn.getAttribute('data-set-theme');
+                if(theme === 'vault') {
+                    document.documentElement.removeAttribute('data-theme');
+                } else {
+                    document.documentElement.setAttribute('data-theme', theme);
+                }
+                
+                // Need to re-trigger the slider background logic so it matches the new theme color
+                const percentage = (audio.currentTime / audio.duration) * 100;
+                if (!isNaN(percentage)) {
+                    seekBar.style.background = `linear-gradient(to right, var(--accent-main) ${percentage}%, var(--border-color) ${percentage}%)`;
+                } else {
+                    seekBar.style.background = 'var(--border-color)';
+                }
+            });
+        });
+
+        // --- Intro Screen Logic ---
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                const welcome = document.getElementById('welcome-screen');
+                welcome.style.opacity = '0';
+                setTimeout(() => {
+                    welcome.style.display = 'none';
+                }, 2500); 
+            }, 3500); 
+        });
+
+        // --- Ambient Particles Generation (Hearts) ---
+        function createParticles() {
+            const particleContainer = document.getElementById('particles');
+            const particleCount = 15; 
+            
+            for(let i = 0; i < particleCount; i++) {
+                let particle = document.createElement('div');
+                particle.className = 'particle';
+                
+                particle.innerHTML = `<svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>`;
+                
+                let size = Math.random() * 15 + 10; 
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                particle.style.left = `${Math.random() * 100}vw`;
+                particle.style.animationDuration = `${Math.random() * 10 + 10}s`; 
+                particle.style.animationDelay = `${Math.random() * 10}s`;
+                
+                particleContainer.appendChild(particle);
+            }
+        }
+        createParticles();
+
+        // --- Playlist Rendering ---
         function renderPlaylist() {
             playlistContainer.innerHTML = '';
             playlist.forEach((song, index) => {
                 const li = document.createElement('li');
                 li.className = `playlist-item ${index === songIndex ? 'playing' : ''}`;
-                // Using an SVG sound wave icon for the currently playing indicator
                 li.innerHTML = `
                     <div class="item-info">
                         <span class="playlist-item-title">${song.title}</span>
@@ -574,26 +923,32 @@
             });
         }
 
-        // Helper function to format time in MM:SS
         function formatTime(seconds) {
-            if (isNaN(seconds)) return "0:00";
+            if (isNaN(seconds) || seconds === Infinity) return "-:--";
             const mins = Math.floor(seconds / 60);
             const secs = Math.floor(seconds % 60);
             return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
         }
 
+        // --- Load & Play Logic ---
         function loadSong(song) {
             titleEl.innerText = song.title;
             artistEl.innerText = song.artist;
-            audio.src = song.src;
             
-            // Re-render playlist to update highlighted song
+            if(song.cover && song.cover.trim() !== "") {
+                recordCoverEl.style.backgroundImage = `url('${song.cover}')`;
+            } else {
+                // If no cover, it falls back to the beautiful CSS gradient + variable color handling
+                recordCoverEl.style.backgroundImage = 'var(--btn-grad)';
+            }
+
+            audio.src = song.src;
             renderPlaylist();
 
             seekBar.value = 0;
-            currentTimeEl.innerText = "0:00";
-            durationEl.innerText = "0:00";
-            seekBar.style.background = `rgba(212, 175, 55, 0.15)`;
+            currentTimeEl.innerText = "-:--";
+            durationEl.innerText = "-:--";
+            seekBar.style.background = `var(--border-color)`;
         }
 
         function playSong() {
@@ -604,7 +959,9 @@
             
             const playPromise = audio.play();
             if (playPromise !== undefined) {
-                playPromise.catch(error => { console.log("Waiting for real audio files."); });
+                playPromise.catch(error => { 
+                    console.log("Audio file missing or blocked by browser."); 
+                });
             }
         }
 
@@ -630,28 +987,24 @@
             if (isPlaying) playSong();
         }
 
-        // --- Event Listeners ---
-        playBtn.addEventListener('click', () => {
-            isPlaying ? pauseSong() : playSong();
-        });
-
+        // --- Controls Event Listeners ---
+        playBtn.addEventListener('click', () => { isPlaying ? pauseSong() : playSong(); });
         prevBtn.addEventListener('click', prevSong);
         nextBtn.addEventListener('click', nextSong);
 
-        // Repeat button logic
         repeatBtn.addEventListener('click', () => {
             isRepeating = !isRepeating;
-            audio.loop = isRepeating; // Native HTML5 audio loop
+            audio.loop = isRepeating; 
             repeatBtn.classList.toggle('repeat-active', isRepeating);
         });
 
-        // Auto-play next song (only fires if audio.loop is false)
         audio.addEventListener('ended', nextSong);
 
-        // --- Progress Bar Logic ---
+        // --- Progress Bar ---
         audio.addEventListener('loadedmetadata', () => {
             seekBar.max = audio.duration;
             durationEl.innerText = formatTime(audio.duration);
+            currentTimeEl.innerText = formatTime(0);
         });
 
         audio.addEventListener('timeupdate', () => {
@@ -660,7 +1013,7 @@
             
             const percentage = (audio.currentTime / audio.duration) * 100;
             if (!isNaN(percentage)) {
-                seekBar.style.background = `linear-gradient(to right, var(--accent-gold) ${percentage}%, rgba(212, 175, 55, 0.15) ${percentage}%)`;
+                seekBar.style.background = `linear-gradient(to right, var(--accent-main) ${percentage}%, var(--border-color) ${percentage}%)`;
             }
         });
 
@@ -669,33 +1022,42 @@
             currentTimeEl.innerText = formatTime(seekBar.value);
         });
 
-        // --- Exit Intent / Back Button Safeguard ---
-        let intentToLeave = false;
+        // --- Modals Logic ---
         
-        // Push an empty state immediately so the back button is trapped
+        // Easter Egg Love Letter
+        const letterBtn = document.getElementById('love-letter-btn');
+        const letterModal = document.getElementById('letter-modal');
+        const closeLetterBtn = document.getElementById('close-letter');
+
+        letterBtn.addEventListener('click', () => {
+            letterModal.classList.add('show');
+        });
+
+        closeLetterBtn.addEventListener('click', () => {
+            letterModal.classList.remove('show');
+        });
+
+        // Exit Intent / Back Button Safeguard
+        let intentToLeave = false;
         history.pushState(null, null, location.href);
         
         window.addEventListener('popstate', function(event) {
-            if (intentToLeave) return; // If they confirmed leave, allow it
+            if (intentToLeave) return; 
             
-            // Show the loving warning modal
             document.getElementById('exit-modal').classList.add('show');
-            
-            // Push another state to trap them again just in case
             history.pushState(null, null, location.href);
         });
 
-        // Modal Button Listeners
         document.getElementById('stay-btn').addEventListener('click', () => {
             document.getElementById('exit-modal').classList.remove('show');
         });
 
         document.getElementById('leave-btn').addEventListener('click', () => {
             intentToLeave = true;
-            history.back(); // Execute the actual back navigation
+            history.back(); 
         });
 
-        // Initialize the app
+        // Init
         loadSong(playlist[songIndex]);
 
     </script>
