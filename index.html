@@ -37,7 +37,7 @@
             --shadow-color: rgba(150, 140, 130, 0.15);
             --inner-shadow: rgba(183, 110, 121, 0.05);
             --border-color: rgba(183, 110, 121, 0.2);
-            --modal-bg: rgba(255, 255, 255, 0.98);
+            --modal-bg: rgba(25, 255, 255, 0.98);
             --btn-grad: linear-gradient(135deg, #b76e79, #9c5863);
             --btn-text: #ffffff;
         }
@@ -391,7 +391,7 @@
             display: flex;
             align-items: center;
             justify-content: flex-start;
-            gap: 0.8rem;
+            gap: 1.2rem;
         }
 
         .control-btn {
@@ -434,9 +434,6 @@
         }
 
         .controls svg { width: 20px; height: 20px; fill: currentColor; }
-        /* Special sizing for seek buttons */
-        .seek-btn svg { width: 18px; height: 18px; }
-        
         .btn-main svg { width: 24px; height: 24px; margin-left: 2px; }
         #pause-icon { margin-left: 0; }
 
@@ -806,17 +803,9 @@
                     <button id="prev" class="control-btn" aria-label="Previous">
                         <svg viewBox="0 0 24 24"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/></svg>
                     </button>
-                    <!-- Backward 10s -->
-                    <button id="backward" class="control-btn seek-btn" aria-label="Seek Backward 10s">
-                        <svg viewBox="0 0 24 24"><path d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"/><text x="9" y="15" font-size="6" font-family="Arial" fill="currentColor">10</text></svg>
-                    </button>
                     <button id="play" class="btn-main control-btn" aria-label="Play/Pause">
                         <svg id="play-icon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
                         <svg id="pause-icon" viewBox="0 0 24 24" style="display:none;"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
-                    </button>
-                    <!-- Forward 10s -->
-                    <button id="forward" class="control-btn seek-btn" aria-label="Seek Forward 10s">
-                        <svg viewBox="0 0 24 24"><path d="M12 5V1l5 5-5 5V7c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6h2c0 4.42-3.58 8-8 8s-8-3.58-8-8 3.58-8 8-8z"/><text x="10" y="15" font-size="6" font-family="Arial" fill="currentColor">10</text></svg>
                     </button>
                     <button id="next" class="control-btn" aria-label="Next">
                         <svg viewBox="0 0 24 24"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/></svg>
@@ -925,8 +914,6 @@ Ham tere chehare pe sitare dekhate hai." </p>
         const prevBtn = document.getElementById('prev');
         const nextBtn = document.getElementById('next');
         const repeatBtn = document.getElementById('repeat');
-        const backwardBtn = document.getElementById('backward');
-        const forwardBtn = document.getElementById('forward');
         
         const titleEl = document.getElementById('title');
         const artistEl = document.getElementById('artist');
@@ -1318,7 +1305,7 @@ Ham tere chehare pe sitare dekhate hai." </p>
         function nextSong() {
             songIndex++;
             if (songIndex > playlist.length - 1) {
-                songIndex = 0; // The Infinite Loop: Back to start
+                songIndex = 0; // Infinite Vault Wrap-around
             }
             loadSong(playlist[songIndex]);
             if (isPlaying) {
@@ -1366,10 +1353,8 @@ Ham tere chehare pe sitare dekhate hai." </p>
 
         prevBtn.addEventListener('click', prevSong);
         nextBtn.addEventListener('click', nextSong);
-        backwardBtn.addEventListener('click', seekBackward);
-        forwardBtn.addEventListener('click', seekForward);
 
-        // --- THE FIXED REPEAT LOGIC ---
+        // --- REPEAT LOGIC ---
         repeatBtn.addEventListener('click', function(e) {
             isRepeating = !isRepeating;
             audio.loop = isRepeating; 
@@ -1381,8 +1366,6 @@ Ham tere chehare pe sitare dekhate hai." </p>
         });
 
         audio.addEventListener('ended', function() {
-            // Infinite Playlist: If repeat is off, go to next song automatically.
-            // If it's the last song, nextSong() resets it to the first.
             if (isRepeating) {
                 audio.currentTime = 0;
                 playSong();
