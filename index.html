@@ -866,6 +866,7 @@ Ham tere chehare pe sitare dekhate hai." </p>
             </div>
             <div class="modal-buttons">
                 <button id="close-letter" class="btn-stay">Close Letter</button>
+                <button id="update-app-btn" class="btn-leave">Sync New Songs ↻</button>
             </div>
         </div>
     </div>
@@ -925,12 +926,6 @@ Ham tere chehare pe sitare dekhate hai." </p>
                 artist: "Talat Mahmood",
                 src: "Sham e gham ki qasam.mp3",
                 cover: "s06.jpeg"
-            },
-            {
-                title: "Neele gagan tale pyar hum kare",
-                artist: "Talat Mahmood",
-                src: "Neele gagan tale pyar hum kare.mp3",
-                cover: "s07.jpeg"
             }
         ];
         // ==========================================
@@ -1434,9 +1429,36 @@ Ham tere chehare pe sitare dekhate hai." </p>
         const letterBtn = document.getElementById('love-letter-btn');
         const letterModal = document.getElementById('letter-modal');
         const closeLetterBtn = document.getElementById('close-letter');
+        const updateAppBtn = document.getElementById('update-app-btn');
         
         letterBtn.addEventListener('click', function() { letterModal.classList.add('show'); });
         closeLetterBtn.addEventListener('click', function() { letterModal.classList.remove('show'); });
+
+        // --- Force Update Cache Logic ---
+        updateAppBtn.addEventListener('click', function() {
+            this.innerText = "Syncing Vault...";
+            this.style.opacity = "0.5";
+            
+            // 1. Delete all old offline caches
+            if ('caches' in window) {
+                caches.keys().then(function(names) {
+                    Promise.all(names.map(name => caches.delete(name)));
+                });
+            }
+            
+            // 2. Unregister the old Service Worker and force a hard reload
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.getRegistrations().then(function(registrations) {
+                    for (let registration of registrations) {
+                        registration.unregister();
+                    }
+                    // Hard reload to fetch the newest files from GitHub
+                    window.location.reload(true);
+                });
+            } else {
+                window.location.reload(true);
+            }
+        });
 
         let intentToLeave = false;
         history.pushState(null, null, location.href);
@@ -1462,8 +1484,24 @@ Ham tere chehare pe sitare dekhate hai." </p>
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 navigator.serviceWorker.register('./sw.js')
-                    .then(reg => console.log('Vault is ready offline!'))
+                    .then(reg => {
+                        console.log('Vault is ready offline!');
+                        
+                        // Check for updates to the service worker every hour (optional but helpful)
+                        setInterval(() => {
+                            reg.update();
+                        }, 1000 * 60 * 60);
+                    })
                     .catch(err => console.log('Vault error:', err));
+                
+                // When a new service worker takes over, reload the page to apply changes
+                let refreshing = false;
+                navigator.serviceWorker.addEventListener('controllerchange', () => {
+                    if (!refreshing) {
+                        refreshing = true;
+                        window.location.reload();
+                    }
+                });
             });
         }
     </script>
