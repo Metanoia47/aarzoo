@@ -1279,28 +1279,8 @@ Ham tere chehare pe sitare dekhate hai." </p>
             return mins + ":" + (secs < 10 ? '0' : '') + secs;
         }
 
-        // --- GLOBAL ERROR CATCHER FOR OFFLINE CRASHES ---
-        audio.addEventListener('error', function(e) {
-            console.error("Audio playback error (Missing offline cache):", e);
-            isPlaying = false;
-            playIcon.style.display = 'block';
-            pauseIcon.style.display = 'none';
-            recordEl.classList.remove('spin');
-            
-            // Give clear visual feedback so the app doesn't look "stuck"
-            titleEl.innerText = "Song Unavailable Offline";
-            artistEl.innerText = "Please Sync or connect to Internet";
-        });
-
-        // --- Core Player Functions (FIXED FOR OFFLINE FREEZING) ---
-        let currentObjectUrl = null;
-
-        async function loadSong(song) {
-            // Stop old audio instantly so it doesn't overlap while the new one loads
-            audio.pause();
-            audio.src = ''; 
-            audio.load();
-
+        // --- Core Player Functions (REVERTED TO SIMPLE, STABLE NATIVE LOGIC) ---
+        function loadSong(song) {
             titleEl.innerText = song.title;
             artistEl.innerText = song.artist;
             if(song.cover && song.cover.trim() !== "") {
@@ -1311,72 +1291,16 @@ Ham tere chehare pe sitare dekhate hai." </p>
                 document.getElementById('dynamic-bg').style.backgroundImage = "none";
             }
             
-            // Always update loop status when loading a new song
+            audio.src = song.src;
             audio.loop = isRepeating; 
+            
             renderPlaylist();
             seekBar.value = 0;
             currentTimeEl.innerText = "-:--";
             durationEl.innerText = "-:--";
             seekBar.style.background = 'var(--border-color)';
 
-            // Update Media Session (Mobile Lock Screen Overlay)
             updateMediaSession(song);
-
-            try {
-                let response;
-
-                // 1. Manually force the browser to look inside the offline Cache API FIRST
-                if ('caches' in window) {
-                    const cacheNames = await caches.keys();
-                    for (let name of cacheNames) {
-                        const cache = await caches.open(name);
-                        const cachedResponse = await cache.match(song.src);
-                        if (cachedResponse) {
-                            response = cachedResponse;
-                            break; // Found it in the cache!
-                        }
-                    }
-                }
-
-                // 2. If it wasn't in the cache, pull it from the network
-                if (!response) {
-                    response = await fetch(song.src);
-                }
-
-                // 3. Convert the complete file to a Blob so it never freezes
-                const blob = await response.blob();
-                
-                if (currentObjectUrl) {
-                    URL.revokeObjectURL(currentObjectUrl);
-                }
-                
-                currentObjectUrl = URL.createObjectURL(blob);
-                audio.src = currentObjectUrl;
-                
-                // If it was already set to play, start it now that the blob is ready
-                if (isPlaying) {
-                    const playPromise = audio.play();
-                    if (playPromise !== undefined) {
-                        playPromise.catch(function(err) { console.log("Audio play caught error.", err); });
-                    }
-                }
-            } catch (error) {
-                console.log("Blob Fetch Failed, falling back to direct src", error);
-                audio.src = song.src;
-                if (isPlaying) {
-                    const fallbackPlay = audio.play();
-                    if (fallbackPlay !== undefined) {
-                        fallbackPlay.catch(function() { 
-                            console.log("Fallback play failed."); 
-                            // Revert UI to prevent it from looking frozen
-                            isPlaying = false;
-                            playIcon.style.display = 'block';
-                            pauseIcon.style.display = 'none';
-                            recordEl.classList.remove('spin');
-                        });
-                    }
-                }
-            }
         }
 
         function playSong() {
@@ -1385,21 +1309,17 @@ Ham tere chehare pe sitare dekhate hai." </p>
             pauseIcon.style.display = 'block';
             recordEl.classList.add('spin');
             
-            // Only fire play if the fetch has actually finished setting the src
-            if (audio.src && audio.src !== "" && !audio.src.endsWith('index.html')) {
-                const playPromise = audio.play();
-                if (playPromise !== undefined) {
-                    playPromise.catch(function(e) { 
-                        console.log("Audio file blocked or missing.", e); 
-                        // If auto-play blocked, revert UI so it isn't stuck
-                        if (e.name === 'NotAllowedError') {
-                            isPlaying = false;
-                            playIcon.style.display = 'block';
-                            pauseIcon.style.display = 'none';
-                            recordEl.classList.remove('spin');
-                        }
-                    });
-                }
+            const playPromise = audio.play();
+            if (playPromise !== undefined) {
+                playPromise.catch(function(e) { 
+                    console.log("Audio file blocked or waiting for interaction.", e); 
+                    if (e.name === 'NotAllowedError') {
+                        isPlaying = false;
+                        playIcon.style.display = 'block';
+                        pauseIcon.style.display = 'none';
+                        recordEl.classList.remove('spin');
+                    }
+                });
             }
             
             if ('mediaSession' in navigator) {
@@ -1538,11 +1458,11 @@ Ham tere chehare pe sitare dekhate hai." </p>
         letterBtn.addEventListener('click', function() { letterModal.classList.add('show'); });
         closeLetterBtn.addEventListener('click', function() { letterModal.classList.remove('show'); });
 
-        // --- Force Update Cache Logic (FIXED DINOSAUR OFFLINE CRASH) ---
+        // --- Force Update Cache Logic ---
         updateAppBtn.addEventListener('click', function() {
             this.innerText = "Syncing Vault...";
             this.style.opacity = "0.5";
-            this.style.pointerEvents = "none"; // Stop multiple clicks from breaking it
+            this.style.pointerEvents = "none";
             
             if ('caches' in window) {
                 caches.keys().then(function(names) {
@@ -1552,18 +1472,17 @@ Ham tere chehare pe sitare dekhate hai." </p>
                                 for (let registration of registrations) {
                                     registration.unregister();
                                 }
-                                // Use standard navigation instead of true-reload to prevent offline hang
-                                window.location.href = window.location.pathname;
+                                window.location.reload(true);
                             });
                         } else {
-                            window.location.href = window.location.pathname;
+                            window.location.reload(true);
                         }
                     }).catch(() => {
-                         window.location.href = window.location.pathname;
+                         window.location.reload(true);
                     });
                 });
             } else {
-                window.location.href = window.location.pathname;
+                window.location.reload(true);
             }
         });
 
