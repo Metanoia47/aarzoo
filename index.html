@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Aarzoo - آرزو</title>
     <!-- Importing ultra-premium fonts -->
+    <link rel="manifest" href="manifest.json">
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Jost:wght@300;400;500&family=Noto+Nastaliq+Urdu:wght@400;700&display=swap" rel="stylesheet">
     
     <style>
@@ -1451,5 +1452,10 @@ Ham tere chehare pe sitare dekhate hai." </p>
 
         loadSong(playlist[songIndex]);
     </script>
+    <script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('sw.js');
+  }
+</script>
 </body>
 </html>
