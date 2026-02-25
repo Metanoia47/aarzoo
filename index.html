@@ -852,7 +852,8 @@
             </ul>
         </div>
 
-        <audio id="audio" crossorigin="anonymous"></audio>
+        <!-- Removed crossorigin="anonymous" to prevent offline CORS blocking -->
+        <audio id="audio"></audio>
     </div>
 
     <!-- Hidden Love Letter Modal -->
@@ -1089,7 +1090,7 @@ Ham tere chehare pe sitare dekhate hai." </p>
             "अब तो हर साँस में तू ही तू है<br>अब तो हर धड़कन में तेरी ही सदा है",
             "मुझ को ये क्या हुआ है तेरे बा'द<br>मैं तो अपने ही जिस्म से डरता हूँ",
             "मिरे कमरे का क्या बयाँ साहिब<br>यहाँ ख़ून थूका गया है शरारत में",
-            "वो जो रूठी तो मनाना भी न आया मुझ को<br>ऐसे नादाँ से कोई इश्क़ करे भी तो क्यूँ",
+            "वो जो रूठी तो मनाना भी न आया मुझ को<br>ऐसे नादाँ से कोई इश्क़ करे भी tangential तो क्यूँ",
             "अब के तजदीद-ए-वफ़ा का नहीं इम्काँ जानाँ<br>याद क्या तुझ को दिलाएँ तेरा पैमाँ जानाँ"
         ];
 
@@ -1271,8 +1272,15 @@ Ham tere chehare pe sitare dekhate hai." </p>
             return mins + ":" + (secs < 10 ? '0' : '') + secs;
         }
 
-        // --- Core Player Functions ---
-        function loadSong(song) {
+        // --- Core Player Functions (FIXED FOR OFFLINE FREEZING) ---
+        let currentObjectUrl = null;
+
+        async function loadSong(song) {
+            // Stop old audio instantly so it doesn't overlap while the new one loads
+            audio.pause();
+            audio.src = ''; 
+            audio.load();
+
             titleEl.innerText = song.title;
             artistEl.innerText = song.artist;
             if(song.cover && song.cover.trim() !== "") {
@@ -1282,7 +1290,7 @@ Ham tere chehare pe sitare dekhate hai." </p>
                 recordCoverEl.style.backgroundImage = 'var(--btn-grad)';
                 document.getElementById('dynamic-bg').style.backgroundImage = "none";
             }
-            audio.src = song.src;
+            
             // Always update loop status when loading a new song
             audio.loop = isRepeating; 
             renderPlaylist();
@@ -1293,6 +1301,34 @@ Ham tere chehare pe sitare dekhate hai." </p>
 
             // Update Media Session (Mobile Lock Screen Overlay)
             updateMediaSession(song);
+
+            try {
+                // FIX: Fetch the audio as a Blob. This completely prevents the app from 
+                // freezing offline due to browser "Range Request" chunking errors!
+                const response = await fetch(song.src);
+                const blob = await response.blob();
+                
+                if (currentObjectUrl) {
+                    URL.revokeObjectURL(currentObjectUrl);
+                }
+                
+                currentObjectUrl = URL.createObjectURL(blob);
+                audio.src = currentObjectUrl;
+                
+                // If it was already set to play, start it now that the blob is ready
+                if (isPlaying) {
+                    const playPromise = audio.play();
+                    if (playPromise !== undefined) {
+                        playPromise.catch(function() { console.log("Audio play caught error."); });
+                    }
+                }
+            } catch (error) {
+                console.log("Offline Blob Fetch Failed, falling back to direct src", error);
+                audio.src = song.src;
+                if (isPlaying) {
+                    audio.play().catch(function() { console.log("Fallback play failed."); });
+                }
+            }
         }
 
         function playSong() {
@@ -1300,10 +1336,15 @@ Ham tere chehare pe sitare dekhate hai." </p>
             playIcon.style.display = 'none';
             pauseIcon.style.display = 'block';
             recordEl.classList.add('spin');
-            const playPromise = audio.play();
-            if (playPromise !== undefined) {
-                playPromise.catch(function() { console.log("Audio file blocked or missing."); });
+            
+            // Only fire play if the fetch has actually finished setting the src
+            if (audio.src && audio.src !== "") {
+                const playPromise = audio.play();
+                if (playPromise !== undefined) {
+                    playPromise.catch(function() { console.log("Audio file blocked or missing."); });
+                }
             }
+            
             if ('mediaSession' in navigator) {
                 navigator.mediaSession.playbackState = "playing";
             }
@@ -1327,7 +1368,7 @@ Ham tere chehare pe sitare dekhate hai." </p>
             }
             loadSong(playlist[songIndex]);
             if (isPlaying) {
-                playSong();
+                playSong(); // UI Update only, audio starts inside loadSong
             }
         }
 
@@ -1338,7 +1379,7 @@ Ham tere chehare pe sitare dekhate hai." </p>
             }
             loadSong(playlist[songIndex]);
             if (isPlaying) {
-                playSong();
+                playSong(); // UI Update only, audio starts inside loadSong
             }
         }
 
