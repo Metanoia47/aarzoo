@@ -1,0 +1,20 @@
+{
+  "name": "Aarzoo",
+  "short_name": "Aarzoo",
+  "start_url": "index.html",
+  "display": "standalone",
+  "background_color": "#080303",
+  "theme_color": "#3a1518",
+  "icons": [
+    {
+      "src": "s01.jpeg",
+      "sizes": "192x192",
+      "type": "image/jpeg"
+    },
+    {
+      "src": "s01.jpeg",
+      "sizes": "512x512",
+      "type": "image/jpeg"
+    }
+  ]
+}
