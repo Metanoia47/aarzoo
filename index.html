@@ -925,6 +925,12 @@ Ham tere chehare pe sitare dekhate hai." </p>
                 artist: "Talat Mahmood",
                 src: "Sham e gham ki qasam.mp3",
                 cover: "s06.jpeg"
+            },
+            {
+                title: "Neele gagan tale pyar hum kare",
+                artist: "Talat Mahmood",
+                src: "Neele gagan tale pyar hum kare.mp3",
+                cover: "s07.jpeg"
             }
         ];
         // ==========================================
@@ -1068,7 +1074,7 @@ Ham tere chehare pe sitare dekhate hai." </p>
             "हाए वो उस का मौज-ख़ेज़ बदन<br>मैं तो प्यासा रहा लब-ए-जू भी",
             "हम अजब हैं कि उस की बाहों में<br>शिकवा-ए-नारसाई करते हैं",
             "हालत-ए-वस्ल में भी हम दोनों<br>लम्हा लम्हा जुदाई करते हैं",
-            "हम को अनफ़ास की अपने है इमारत करनी<br>इस इमारत की लबों पर तेरे बुनियाद रखें",
+            "हम को अनफ़ास की अपने है इमारत करनी<br>इस इमारत की लबों  पर तेरे बुनियाद रखें",
             "क्या कहें कितने ही नुक्ते हैं जो बरते न गए<br>ख़ुश-बदन इश्क़ करें और हमें उस्ताद रखें",
             "ये न सोचा था ज़ेर-ए-साया-ए-ज़ुल्फ़<br>कि बिछड़ जाएगी ये ख़ुशबू भी",
             "तुम मेरी इक ख़ुद-मस्ती हो मैं हूँ तुम्हारी ख़ुद-बीनी<br>रिश्ते में इक इश्क़ के हम तुम दोनों बे-बुनियाद हुए",
@@ -1453,9 +1459,13 @@ Ham tere chehare pe sitare dekhate hai." </p>
         loadSong(playlist[songIndex]);
     </script>
     <script>
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('sw.js');
-  }
-</script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js')
+                    .then(reg => console.log('Vault is ready offline!'))
+                    .catch(err => console.log('Vault error:', err));
+            });
+        }
+    </script>
 </body>
 </html>
