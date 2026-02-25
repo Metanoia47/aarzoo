@@ -959,15 +959,22 @@ Ham tere chehare pe sitare dekhate hai." </p>
         let isPlaying = false;
         let isRepeating = false;
 
-        // --- Intro Screen Logic ---
+        // --- Intro Screen Logic (FIXED FOR FREEZE) ---
         const enterVaultBtn = document.getElementById('enter-vault-btn');
         const welcomeScreen = document.getElementById('welcome-screen');
 
         enterVaultBtn.addEventListener('click', function() {
+            // FIX: Instantly disable clicks on the welcome screen so it stops blocking the UI
+            welcomeScreen.style.pointerEvents = 'none';
             welcomeScreen.style.opacity = '0';
             setTimeout(function() {
                 welcomeScreen.style.display = 'none';
             }, 2500); 
+
+            // FIX: Play immediately on tap to bypass strict mobile auto-play locks
+            if (!isPlaying && audio.src && audio.src !== window.location.href) {
+                playSong();
+            }
         });
 
         // --- Poetry Logic ---
@@ -1031,7 +1038,7 @@ Ham tere chehare pe sitare dekhate hai." </p>
             "बे-क़रारी सी बे-क़रारी है<br>वस्ल है और फ़िराक़ तारी है",
             "अपने होने का कुछ एहसास नहीं है मुझ को<br>मैं ने औरों से सुना है कि परेशान हूँ मैं",
             "एक तो हुस्न बला उस पे बनावट आफ़त<br>घर बिगाड़ेंगे हज़ारों के सँवरने वाले",
-            "गले मिलते हैं जब भी हम किसी से<br>तो अपने आप को रोते हैं हम भी",
+            "गले मिलते हैं जब भी हम किसी से<br>तो अपने  आप को रोते हैं हम भी",
             "कितने ऐश से रहते होंगे, कितने इतराते होंगे<br>जाने कैसे लोग वो होंगे जो उस को भाते होंगे",
             "मुझे अब तुम से डर लगने लगा है<br>तुम्हें मुझ से मोहब्बत हो गई क्या?",
             "अब मिरे पास तुम आई हो तो क्या आई हो<br>मैं ने तो ख़ुद को भी अब पास नहीं रक्खा है",
@@ -1056,7 +1063,7 @@ Ham tere chehare pe sitare dekhate hai." </p>
             "हम अजब हैं कि उस के पहलू में<br>उस की ही आरज़ू में रहते हैं",
             "शाम तक सुब्ह की नज़रों से उतर जाते हैं<br>इतने समझौतों पे जीते हैं कि मर जाते हैं",
             "तुझ से मिल कर भी कहाँ मिलता हूँ<br>मैं तो बस ख़ुद में ही कहीं रहता हूँ",
-            "यूँ तो सब कुछ मेरे ख़िलाफ़ ही है<br>हाँ मगर वो भी मेरे साथ नहीं",
+            "यूँ तो सब कुछ मेरे ख़िलाफ़ ही है<br>हाँ मगर  वो भी मेरे साथ नहीं",
             "मुझ से मत पूछ मेरी बेताबी<br>मैं ने सदियों की प्यास पाई है",
             "सीने से लग के मेरे वो रोने लगी बहुत<br>जिस को मेरी वफ़ा का यक़ीं तक नहीं रहा",
             "आज तो मिल के भी न मिले हम<br>आज तो और भी क़रीब थे हम",
@@ -1090,7 +1097,7 @@ Ham tere chehare pe sitare dekhate hai." </p>
             "अब तो हर साँस में तू ही तू है<br>अब तो हर धड़कन में तेरी ही सदा है",
             "मुझ को ये क्या हुआ है तेरे बा'द<br>मैं तो अपने ही जिस्म से डरता हूँ",
             "मिरे कमरे का क्या बयाँ साहिब<br>यहाँ ख़ून थूका गया है शरारत में",
-            "वो जो रूठी तो मनाना भी न आया मुझ को<br>ऐसे नादाँ से कोई इश्क़ करे भी tangential तो क्यूँ",
+            "वो जो रूठी तो मनाना भी न आया मुझ को<br>ऐसे नादाँ से कोई इश्क़ करे भी तो क्यूँ",
             "अब के तजदीद-ए-वफ़ा का नहीं इम्काँ जानाँ<br>याद क्या तुझ को दिलाएँ तेरा पैमाँ जानाँ"
         ];
 
@@ -1272,6 +1279,19 @@ Ham tere chehare pe sitare dekhate hai." </p>
             return mins + ":" + (secs < 10 ? '0' : '') + secs;
         }
 
+        // --- GLOBAL ERROR CATCHER FOR OFFLINE CRASHES ---
+        audio.addEventListener('error', function(e) {
+            console.error("Audio playback error (Missing offline cache):", e);
+            isPlaying = false;
+            playIcon.style.display = 'block';
+            pauseIcon.style.display = 'none';
+            recordEl.classList.remove('spin');
+            
+            // Give clear visual feedback so the app doesn't look "stuck"
+            titleEl.innerText = "Song Unavailable Offline";
+            artistEl.innerText = "Please Sync or connect to Internet";
+        });
+
         // --- Core Player Functions (FIXED FOR OFFLINE FREEZING) ---
         let currentObjectUrl = null;
 
@@ -1303,9 +1323,27 @@ Ham tere chehare pe sitare dekhate hai." </p>
             updateMediaSession(song);
 
             try {
-                // FIX: Fetch the audio as a Blob. This completely prevents the app from 
-                // freezing offline due to browser "Range Request" chunking errors!
-                const response = await fetch(song.src);
+                let response;
+
+                // 1. Manually force the browser to look inside the offline Cache API FIRST
+                if ('caches' in window) {
+                    const cacheNames = await caches.keys();
+                    for (let name of cacheNames) {
+                        const cache = await caches.open(name);
+                        const cachedResponse = await cache.match(song.src);
+                        if (cachedResponse) {
+                            response = cachedResponse;
+                            break; // Found it in the cache!
+                        }
+                    }
+                }
+
+                // 2. If it wasn't in the cache, pull it from the network
+                if (!response) {
+                    response = await fetch(song.src);
+                }
+
+                // 3. Convert the complete file to a Blob so it never freezes
                 const blob = await response.blob();
                 
                 if (currentObjectUrl) {
@@ -1319,14 +1357,24 @@ Ham tere chehare pe sitare dekhate hai." </p>
                 if (isPlaying) {
                     const playPromise = audio.play();
                     if (playPromise !== undefined) {
-                        playPromise.catch(function() { console.log("Audio play caught error."); });
+                        playPromise.catch(function(err) { console.log("Audio play caught error.", err); });
                     }
                 }
             } catch (error) {
-                console.log("Offline Blob Fetch Failed, falling back to direct src", error);
+                console.log("Blob Fetch Failed, falling back to direct src", error);
                 audio.src = song.src;
                 if (isPlaying) {
-                    audio.play().catch(function() { console.log("Fallback play failed."); });
+                    const fallbackPlay = audio.play();
+                    if (fallbackPlay !== undefined) {
+                        fallbackPlay.catch(function() { 
+                            console.log("Fallback play failed."); 
+                            // Revert UI to prevent it from looking frozen
+                            isPlaying = false;
+                            playIcon.style.display = 'block';
+                            pauseIcon.style.display = 'none';
+                            recordEl.classList.remove('spin');
+                        });
+                    }
                 }
             }
         }
@@ -1338,10 +1386,19 @@ Ham tere chehare pe sitare dekhate hai." </p>
             recordEl.classList.add('spin');
             
             // Only fire play if the fetch has actually finished setting the src
-            if (audio.src && audio.src !== "") {
+            if (audio.src && audio.src !== "" && !audio.src.endsWith('index.html')) {
                 const playPromise = audio.play();
                 if (playPromise !== undefined) {
-                    playPromise.catch(function() { console.log("Audio file blocked or missing."); });
+                    playPromise.catch(function(e) { 
+                        console.log("Audio file blocked or missing.", e); 
+                        // If auto-play blocked, revert UI so it isn't stuck
+                        if (e.name === 'NotAllowedError') {
+                            isPlaying = false;
+                            playIcon.style.display = 'block';
+                            pauseIcon.style.display = 'none';
+                            recordEl.classList.remove('spin');
+                        }
+                    });
                 }
             }
             
@@ -1481,35 +1538,38 @@ Ham tere chehare pe sitare dekhate hai." </p>
         letterBtn.addEventListener('click', function() { letterModal.classList.add('show'); });
         closeLetterBtn.addEventListener('click', function() { letterModal.classList.remove('show'); });
 
-        // --- Force Update Cache Logic ---
+        // --- Force Update Cache Logic (FIXED DINOSAUR OFFLINE CRASH) ---
         updateAppBtn.addEventListener('click', function() {
             this.innerText = "Syncing Vault...";
             this.style.opacity = "0.5";
+            this.style.pointerEvents = "none"; // Stop multiple clicks from breaking it
             
-            // 1. Delete all old offline caches
             if ('caches' in window) {
                 caches.keys().then(function(names) {
-                    Promise.all(names.map(name => caches.delete(name)));
-                });
-            }
-            
-            // 2. Unregister the old Service Worker and force a hard reload
-            if ('serviceWorker' in navigator) {
-                navigator.serviceWorker.getRegistrations().then(function(registrations) {
-                    for (let registration of registrations) {
-                        registration.unregister();
-                    }
-                    // Hard reload to fetch the newest files from GitHub
-                    window.location.reload(true);
+                    Promise.all(names.map(name => caches.delete(name))).then(() => {
+                        if ('serviceWorker' in navigator) {
+                            navigator.serviceWorker.getRegistrations().then(function(registrations) {
+                                for (let registration of registrations) {
+                                    registration.unregister();
+                                }
+                                // Use standard navigation instead of true-reload to prevent offline hang
+                                window.location.href = window.location.pathname;
+                            });
+                        } else {
+                            window.location.href = window.location.pathname;
+                        }
+                    }).catch(() => {
+                         window.location.href = window.location.pathname;
+                    });
                 });
             } else {
-                window.location.reload(true);
+                window.location.href = window.location.pathname;
             }
         });
 
         let intentToLeave = false;
         history.pushState(null, null, location.href);
-        window.addEventListener('popstate', function() {
+        window.addEventListener('popstate', function(e) {
             if (intentToLeave) return; 
             document.getElementById('exit-quote-text').innerHTML = `"${getNextQuote()}"`;
             document.getElementById('exit-modal').classList.add('show');
@@ -1546,7 +1606,7 @@ Ham tere chehare pe sitare dekhate hai." </p>
                 navigator.serviceWorker.addEventListener('controllerchange', () => {
                     if (!refreshing) {
                         refreshing = true;
-                        window.location.reload();
+                        window.location.href = window.location.pathname; // Safer update method
                     }
                 });
             });
